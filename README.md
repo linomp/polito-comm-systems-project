@@ -35,7 +35,7 @@ _Good news is this stuff needs to be done only once..._
     - Make sure the "Python interpreter" option is set to the interpreter you just created in the previous steps.
     - Now you should be able to click on "Run <your configuration name>", next to where it previously said "Add Configuration".
 
-Note: these steps are 100% tested.
+    Note: these steps are 100% tested 
 
 ### Instructions to run the web service (raw Anaconda interpreter):
 1. Clone the repo
@@ -47,7 +47,7 @@ Note: these steps are 100% tested.
   
     `uvicorn main:app --reload`
  
- Note: these steps are untested.
+    Note: these steps are untested :(  (I got rid of anaconda and will never look back)
     
 ## Front-end
 
