@@ -34,8 +34,10 @@ _Good news is this stuff needs to be done only once..._
     - In the "Application File" option, point it to the `main.py` file. 
     - Make sure the "Python interpreter" option is set to the interpreter you just created in the previous steps.
     - Now you should be able to click on "Run <your configuration name>", next to where it previously said "Add Configuration".
-  
-### Instructions to run the web service (raw Anaconda interpreter*):
+
+Note: these steps are 100% tested.
+
+### Instructions to run the web service (raw Anaconda interpreter):
 1. Clone the repo
 2. Open anaconda prompt and navigate to the folder 'inventory-backend'
 3. Type this (to automatically install any missing packages that our project requires - [source](https://stackoverflow.com/a/64538393/8522453)): 
@@ -44,7 +46,9 @@ _Good news is this stuff needs to be done only once..._
  4. Then to start the server, in that same directory run: 
   
     `uvicorn main:app --reload`
-  
+ 
+ Note: these steps are untested.
+    
 ## Front-end
 
 - Professor suggested Flutter & Dart
