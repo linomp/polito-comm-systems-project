@@ -1,0 +1,8 @@
+.idea/modules.xml
+.idea/vcs.xml
+.idea/inspectionProfiles/profiles_settings.xml
+.idea/inspectionProfiles/Project_Default.xml
+inventory-backend/.idea/dataSources.xml
+inventory-backend/.idea/sqldialects.xml
+.idea/polito-comm-systems-project.iml
+**/__pycache__/**
