@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from app.cruds.tweets import get_user_tweets, insert_tweets, get_all_tweet
+from app.cruds.tweets import get_user_tweets, insert_tweets, get_all_tweets
 from app.schemas.tweets import Tweet
 
 router = APIRouter()
@@ -7,7 +7,7 @@ router = APIRouter()
 
 @router.get("/tweets/", tags=["tweet"])
 async def read_tweets():
-    tweet_list = await get_all_tweet()
+    tweet_list = await get_all_tweets()
 
     return tweet_list
 

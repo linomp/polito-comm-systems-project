@@ -4,7 +4,7 @@ from app.core.db import database
 from app.schemas.tweets import Tweet
 
 
-async def get_all_tweet():
+async def get_all_tweets():
     query = "SELECT * FROM tweets"
     data = await database.fetch_all(query)
 
