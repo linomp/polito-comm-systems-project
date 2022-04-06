@@ -1,9 +1,9 @@
 from fastapi import FastAPI
-from .routers import tweets
+from .routers import items
 from app.core.db import database
 
 app = FastAPI()
-app.include_router(tweets.router)
+app.include_router(items.router)
 sleep_time = 10
 
 
@@ -20,5 +20,6 @@ async def shutdown():
 @app.get("/")
 def root():
     return {
-        "message": "Hello from FastAPI + MySQL app w/o ORM"
+        "message": "Hello from FastAPI + MySQL app w/o ORM",
+        "hint": "Try this endpoint:  http://localhost:8000/items/"
     }
