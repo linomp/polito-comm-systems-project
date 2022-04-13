@@ -16,25 +16,35 @@ def create_connection(host_name, user_name, user_password):
 
     return connection
 
+
 def close_connection(connection):
     connection.close()
     return
     
 
-def add_user(connection, name, mail_adr, password):
-
-    query = ("INSERT INTO users "
-             "(id, user_id, name, mail_adr, hashed_pw, salt)")
-
-
-    return 
-
-def execute(connection, query, data):
+async def execute(connection, query, data): #EXECUTE SEM CONN??
     cursor = connection.cursor()
-    cursor.execute(query, data)
+    try:
+        # Execute the SQL command
+        cursor.execute(query, data)
+       # Commit your changes in the database
+        connection.commit()
+    except:
+        # Rollback in case there is any error
+        connection.rollback()
     cursor.close()
 
     return
+
+
+async def fetch_all(query):
+    return
+
+
+async def fetch_one(query):
+    return
+
+
 
 
 
