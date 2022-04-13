@@ -1,6 +1,6 @@
 from fastapi import APIRouter
-from app.cruds.tweets import get_user_tweets, insert_tweets, get_all_tweets
-from app.schemas.tweets import Tweet
+from app.mocks.cruds.tweets import get_user_tweets, insert_tweets, get_all_tweets
+from app.mocks.schemas.tweets import Tweet
 
 router = APIRouter()
 
