@@ -3,22 +3,27 @@ from schemas.user import User
 
 
 async def add_user(new_user: User):
-    values = {"id": new_user.id,    #É PRECISO METER ID TABELA?
-              "user_id": new_user.user_id, 
+    values = {"user_id": new_user.user_id, 
               "name": new_user.name, 
               "mail_adr": new_user.mail_adr, 
               "hashed_pw": new_user.hashed_pw, 
-              "salt": new_user.salt
+              "salt": new_user.salt,
+              "rfid": new_user.user_id, 
+              "pin": new_user.pin
               }
-              #DEFENIR NULL RFID E PIN
 
-    query = "INSERT INTO users(id, user_id, name, mail_adr, hashed_pw, salt) VALUES (:id, :user_id, :name, :mail_adr, :hashed_pw, :salt)"
-    insert_id = await db_functions.execute(query=query, values=values)
+    query = "INSERT INTO users(user_id, name, mail_adr, hashed_pw, salt, rfid, pin) VALUES (:user_id, :name, :mail_adr, :hashed_pw, :salt, :rfid, :pin)"
+    await db_functions.execute(query=query, values=values)
 
     return 
 
 
-async def add_card_to_user(user_id: int):
+async def update_users_card(user: User): #NAO SEI SE FUNCIONA
+    values = {"rfid": user.rfid, 
+              "pin": user.pin
+              }
+    query = "UPDATE users SET rfid=:rfid, pin=:pin WHERE user_id={user.user_id}"
+    await db_functions.execute(query=query, values=values)
 
     return
 

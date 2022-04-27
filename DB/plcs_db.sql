@@ -23,7 +23,7 @@ DROP TABLE IF EXISTS `costumers`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `costumers` (
-  `id` int NOT NULL,
+  `id` int NOT NULL AUTO_INCREMENT,
   `cst_id` int NOT NULL,
   `name` varchar(45) NOT NULL,
   `category` varchar(45) NOT NULL,
@@ -48,7 +48,7 @@ DROP TABLE IF EXISTS `items`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `items` (
-  `id` int NOT NULL,
+  `id` int NOT NULL AUTO_INCREMENT,
   `name` varchar(45) NOT NULL,
   `description` varchar(45) DEFAULT NULL,
   `category` varchar(45) NOT NULL,
@@ -77,7 +77,7 @@ DROP TABLE IF EXISTS `terminal_table`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `terminal_table` (
-  `id` int NOT NULL,
+  `id` int NOT NULL AUTO_INCREMENT,
   `mac_adr` varchar(45) NOT NULL,
   `cst_id` int NOT NULL,
   `pin` int NOT NULL,
@@ -104,7 +104,7 @@ DROP TABLE IF EXISTS `users`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `users` (
-  `id` int NOT NULL,
+  `id` int NOT NULL AUTO_INCREMENT,
   `user_id` int NOT NULL,
   `name` varchar(45) DEFAULT NULL,
   `mail_adr` varchar(45) DEFAULT NULL,
