@@ -1,6 +1,6 @@
 from pydantic.main import BaseModel
 
 
-class Message(BaseModel):
+class TestMessage(BaseModel):
     message: str
     timestamp: str
