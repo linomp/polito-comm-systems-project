@@ -6,7 +6,7 @@ def read_nfc_tag():
     return "123456789"
 
 
-class SimpleChat(WebSocket):
+class NfcTagReaderSocket(WebSocket):
     def connected(self):
         print(self.address, 'connected')
         for client in clients:
@@ -20,7 +20,6 @@ class SimpleChat(WebSocket):
             client.send_message(self.address[0] + u' - disconnected')
 
     def handle(self):
-        #
         if self.data == "read_nfc_tag":
             nfc_tag_value = read_nfc_tag()
             for client in clients:
@@ -29,5 +28,5 @@ class SimpleChat(WebSocket):
 
 clients = []
 
-server = WebSocketServer('', 9999, SimpleChat)
+server = WebSocketServer('', 9999, NfcTagReaderSocket)
 server.serve_forever()
