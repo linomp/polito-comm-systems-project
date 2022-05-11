@@ -8,20 +8,20 @@ from jose import JWTError, jwt
 
 from app.dependencies import oauth2_scheme
 from app.env import *
-from app.mocks.cruds.users import get_user, fake_users_db
-from app.mocks.schemas.user import User, UserInDB
+
 from app.schemas.Token import TokenData
 from app.service.auth import verify_password
 
+# TODO: replace mocks with real implementation!
+from app.mocks.cruds.users import get_user
+from app.mocks.schemas.user import User
 
-def get_user(db, username: str):
-    if username in db:
-        user_dict = db[username]
-        return UserInDB(**user_dict)
+from app.cruds import users as user_funcs
+from app.schemas.user import User as RealDBUser
 
 
-def authenticate_user(fake_db, username: str, password: str):
-    user = get_user(fake_db, username)
+def authenticate_user(username: str, password: str):
+    user = get_user(username)
     if not user:
         return False
     if not verify_password(password, user.hashed_password):
@@ -54,7 +54,7 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
         token_data = TokenData(username=username)
     except JWTError:
         raise credentials_exception
-    user = get_user(fake_users_db, username=token_data.username)
+    user = get_user(token_data.username)
     if user is None:
         raise credentials_exception
     return user
@@ -64,3 +64,17 @@ async def get_current_active_user(current_user: User = Depends(get_current_user)
     if current_user.disabled:
         raise HTTPException(status_code=400, detail="Inactive user")
     return current_user
+
+
+async def get_protected_route_example(current_user: User):
+    return {"message": f"Welcome to this protected route, {current_user.full_name}"}
+
+
+def test_add_user(mail):
+    new_user = RealDBUser(id=None, name="Maria Margarida", mail_adr=mail,
+                          hashed_pw=None, salt=None, rfid=None, pin=None)
+    user_funcs.add_user(new_user, "password")
+
+    created_user = user_funcs.get_user_from_email(mail)
+
+    return created_user
