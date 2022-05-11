@@ -3,7 +3,6 @@ from typing import Optional
 
 class User(BaseModel):
     id: Optional[int]
-    user_id: int
     name: str
     mail_adr: str
     hashed_pw: Optional[str]

@@ -32,7 +32,6 @@ def close_connection():
 def execute(query, data): 
     cursor = connection.cursor()
     try:
-        print(query, data)
         cursor.execute(query, data)
         connection.commit()
         print("Query executed")
