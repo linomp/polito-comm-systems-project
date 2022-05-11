@@ -10,7 +10,7 @@ async def add_costumer(new_costumer: Costumer):
               new_costumer.category}
               
     query = "INSERT INTO costumers(cst_id, name, category) VALUES (:cst_id, :name, :category)"
-    insert_id = await db_functions.execute(query=query, values=values)
+    db_functions.execute(query, values)
 
     return 
 
