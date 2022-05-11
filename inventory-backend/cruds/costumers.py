@@ -1,11 +1,13 @@
+from asyncio.windows_events import NULL
 from core import db_functions
 from schemas.costumer import Costumer
 
 
 async def add_costumer(new_costumer: Costumer):
-    values = {"cst_id": new_costumer.cst_id,
-              "name": new_costumer.name,
-              "category": new_costumer.category}
+    values = {NULL,
+              new_costumer.cst_id,
+              new_costumer.name,
+              new_costumer.category}
               
     query = "INSERT INTO costumers(cst_id, name, category) VALUES (:cst_id, :name, :category)"
     insert_id = await db_functions.execute(query=query, values=values)

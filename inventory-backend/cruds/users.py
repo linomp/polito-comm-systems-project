@@ -1,49 +1,116 @@
+from asyncio.windows_events import NULL
+
+from sympy import satisfiable
 from core import db_functions
 from schemas.user import User
+import bcrypt
 
 
-async def add_user(new_user: User):
-    values = {"user_id": new_user.user_id, 
-              "name": new_user.name, 
-              "mail_adr": new_user.mail_adr, 
-              "hashed_pw": new_user.hashed_pw, 
-              "salt": new_user.salt,
-              "rfid": new_user.user_id, 
-              "pin": new_user.pin
-              }
+def add_user(new_user: User, password: str):
 
-    query = "INSERT INTO users(user_id, name, mail_adr, hashed_pw, salt, rfid, pin) VALUES (:user_id, :name, :mail_adr, :hashed_pw, :salt, :rfid, :pin)"
-    await db_functions.execute(query=query, values=values)
+    hashed, salt = hash_password(password)
+    
+    
+
+    values = (NULL,
+            new_user.user_id, 
+            new_user.name, 
+            new_user.mail_adr,
+            hashed,
+            salt,
+            new_user.rfid, 
+            new_user.pin
+            )
+
+    query = ("INSERT INTO users (id, user_id, name, mail_adr, hashed_pw, salt, rfid, pin) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)")
+    db_functions.execute(query, values)
+    
 
     return 
 
 
-async def update_users_card(user: User): #NAO SEI SE FUNCIONA
-    values = {"rfid": user.rfid, 
-              "pin": user.pin
-              }
-    query = "UPDATE users SET rfid=:rfid, pin=:pin WHERE user_id={user.user_id}"
-    await db_functions.execute(query=query, values=values)
+def change_password(user_id: int, pwd: str):
+
+    hashed, salt = hash_password(pwd)
+
+    values = ( hashed,
+               salt,
+               user_id 
+              )
+    
+    query = "UPDATE users SET hashed_pw=%s, salt=%s WHERE user_id=%s"
+    db_functions.execute(query, values)
+    
+    return
+
+
+def check_password(user_id: int, pwd: str):
+
+    user = get_user_from_id(user_id)
+
+    return bcrypt.checkpw(pwd.encode('utf-8'), user.hashed_pw.encode('utf-8'))
+
+
+def hash_password(password: str):
+
+    bytePwd = password.encode('utf-8')
+    salt = bcrypt.gensalt()
+    hashed = bcrypt.hashpw(bytePwd, salt)
+    
+    return hashed, salt
+
+
+
+def update_users_card(user: User): #NAO SEI SE FUNCIONA
+    
+    values = (user.rfid, 
+              user.pin,
+              user.user_id
+            )
+    query = "UPDATE users SET rfid=%s, pin=%s WHERE user_id=%s"
+    db_functions.execute(query, values)
 
     return
 
 
-async def get_user_from_id(user_id: int):
-    query = f"SELECT id, user_id, name, mail_adr, hashed_pw, salt, rfid, pin FROM users WHERE user_id={user_id}"
-    data = await db_functions.fetch_one(query)
+def get_user_from_id(user_id: int):
+    values = (user_id,)
+    query = "SELECT id, user_id, name, mail_adr, hashed_pw, salt, rfid, pin FROM users WHERE user_id=%s"
+    data = db_functions.fetch_one(query, values)
 
-    return data
+    new_user = User(id=data[0], user_id=data[1], name=data[2], mail_adr=data[3], 
+                    hashed_pw=data[4], salt=data[5], rfid=data[6], pin=data[7])
 
-
-async def get_user_from_email(mail_adr: str):
-    query = f"SELECT id, user_id, name, mail_adr, hashed_pw, salt, rfid, pin FROM users WHERE mail_adr={mail_adr}"
-    data = await db_functions.fetch_one(query)
-
-    return data
+    return new_user
 
 
-async def get_user_from_rfid(rfid: int):
-    query = f"SELECT id, user_id, name, mail_adr, hashed_pw, salt, rfid, pin FROM users WHERE rfid={rfid}"
-    data = await db_functions.fetch_one(query)
+def get_user_from_email(mail_adr: str):
+    values = (mail_adr,)
+    query = "SELECT id, user_id, name, mail_adr, hashed_pw, salt, rfid, pin FROM users WHERE mail_adr=%s"
+    data = db_functions.fetch_one(query, values)
 
-    return data
+    new_user = User(id=data[0], user_id=data[1], name=data[2], mail_adr=data[3], 
+                    hashed_pw=data[4], salt=data[5], rfid=data[6], pin=data[7])
+
+    return new_user
+
+
+def get_user_from_rfid(rfid: int):
+    values = (rfid,)
+    query = "SELECT id, user_id, name, mail_adr, hashed_pw, salt, rfid, pin FROM users WHERE rfid=%s"
+    data = db_functions.fetch_one(query, values)
+
+    new_user = User(id=data[0], user_id=data[1], name=data[2], mail_adr=data[3], 
+                    hashed_pw=data[4], salt=data[5], rfid=data[6], pin=data[7])
+
+    return new_user
+
+
+def remove_user(user_id: int):
+
+    values = (user_id,)
+    query = "DELETE FROM users WHERE user_id=%s"
+    db_functions.execute(query, values)
+
+    return
+

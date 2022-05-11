@@ -1,12 +1,12 @@
 from pydantic.main import BaseModel
-
+from typing import Optional
 
 class User(BaseModel):
-    id: int
+    id: Optional[int]
     user_id: int
     name: str
     mail_adr: str
-    hashed_pw: str
-    salt: str
-    rfid: int
-    pin: int
+    hashed_pw: Optional[str]
+    salt: Optional[str]
+    rfid: Optional[int]
+    pin: Optional[int]
