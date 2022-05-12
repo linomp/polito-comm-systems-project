@@ -51,7 +51,16 @@ try:
     #new_cst = costumer.Costumer(id=NULL, name="Library", category=None)
     #print(costumers.add_user2costumer(3,3, None))
 
-    costumers.remove_costumer(3)
+    #costumers.remove_costumer(3)
+
+
+
+    new_item = item.Item(id=None, name="Yellow Highlighter", description=None,  
+                         category="Tools", costumer_id=1, rfid=None)
+
+    #items.add_item(new_item)
+    #items.remove_item(5)
+
 
     db_functions.close_connection()
 
