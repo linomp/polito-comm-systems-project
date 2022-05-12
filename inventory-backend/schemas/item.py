@@ -1,10 +1,11 @@
 from pydantic.main import BaseModel
+from typing import Optional
 
 
 class Item(BaseModel):
     id: int
     name: str
-    description: str
+    description: Optional[str]
     category: str
-    costumer: int
-    rfid: int
+    costumer_id: int
+    rfid: Optional[int]

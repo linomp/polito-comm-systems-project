@@ -1,4 +1,5 @@
 from asyncio.windows_events import NULL
+from unicodedata import category
 import mysql.connector as con
 from mysql.connector import Error
 from core import db_functions
@@ -37,8 +38,7 @@ try:
     password ="password"
     users.change_password(id, password)
     '''
-    id=5
-    users.remove_user(id)
+    
 
     '''
     mail="mariamargarida@gmail.com"
@@ -48,8 +48,10 @@ try:
     print(users.get_user_from_rfid(rfid))
     '''
 
+    #new_cst = costumer.Costumer(id=NULL, name="Library", category=None)
+    #print(costumers.add_user2costumer(3,3, None))
 
-    
+    costumers.remove_costumer(3)
 
     db_functions.close_connection()
 
