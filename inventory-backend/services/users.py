@@ -17,7 +17,7 @@ from mocks.cruds.users import get_user
 from mocks.schemas.user import User
 
 from cruds import users as user_funcs
-from schemas.user import User as RealDBUser
+from schemas.user import User as RealDBUser, NewUserDAO
 
 
 def authenticate_user(username: str, password: str):
@@ -70,11 +70,12 @@ async def get_protected_route_example(current_user: User):
     return {"message": f"Welcome to this protected route, {current_user.full_name}"}
 
 
-def test_add_user(mail):
-    new_user = RealDBUser(id=None, name="Maria Margarida", mail_adr=mail,
+def add_new_user(user_data: NewUserDAO):
+    new_user = RealDBUser(id=None, name=user_data.name, mail_adr=user_data.mail_adr,
                           hashed_pw=None, salt=None, rfid=None, pin=None)
-    user_funcs.add_user(new_user, "password")
 
-    created_user = user_funcs.get_user_from_email(mail)
+    user_funcs.add_user(new_user, user_data.password)
+
+    created_user = user_funcs.get_user_from_email(user_data.mail_adr)
 
     return created_user

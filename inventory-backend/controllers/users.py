@@ -6,15 +6,16 @@ from starlette import status
 
 from mocks.schemas.user import User
 from schemas.Token import Token
+from schemas.user import NewUserDAO
 from services.users import get_current_active_user, authenticate_user, create_access_token, \
-    get_protected_route_example, test_add_user
+    get_protected_route_example, add_new_user
 
 from env import ACCESS_TOKEN_EXPIRE_MINUTES
 
 router = APIRouter()
 
 
-@router.post("/token", response_model=Token)
+@router.post("/users/auth", response_model=Token)
 async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends()):
     user = authenticate_user(form_data.username, form_data.password)
     if not user:
@@ -41,8 +42,8 @@ async def protected_route_example(current_user: User = Depends(get_current_activ
     return msg
 
 
-@router.post("/add-user", tags=["test-db"])
-def add_user(mail: str):
-    created_user = test_add_user(mail)
+@router.post("/users", tags=["test-db"])
+def add_user(user_data: NewUserDAO):
+    created_user = add_new_user(user_data)
 
     return created_user
