@@ -3,7 +3,7 @@ import sys
 import mysql.connector as con
 from mysql.connector import Error
 
-from app.env import *
+from env import *
 
 
 class DBComponent:
@@ -35,7 +35,8 @@ class DBComponent:
             print(f"The error '{e}' occurred")
         return
 
-    # TODO: refactor to actually return the error upstream
+    # TODO: refactor to actually return the error upstream.
+    #       If something goes wrong, it gets lost here and then we have no fucking idea
     def execute(self, query, data):
         cursor = self.connection.cursor()
 

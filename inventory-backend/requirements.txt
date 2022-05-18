@@ -7,3 +7,5 @@ passlib~=1.7.4
 mysql==0.0.3
 mysql-connector-python==8.0.29
 bcrypt==3.2.2
+pytest==7.1.2
+requests==2.27.1

@@ -6,18 +6,18 @@ from starlette import status
 
 from jose import JWTError, jwt
 
-from app.dependencies import oauth2_scheme
-from app.env import *
+from dependencies import oauth2_scheme
+from env import *
 
-from app.schemas.Token import TokenData
-from app.service.auth import verify_password
+from schemas.Token import TokenData
+from services.auth import verify_password
 
 # TODO: replace mocks with real implementation!
-from app.mocks.cruds.users import get_user
-from app.mocks.schemas.user import User
+from mocks.cruds.users import get_user
+from mocks.schemas.user import User
 
-from app.cruds import users as user_funcs
-from app.schemas.user import User as RealDBUser
+from cruds import users as user_funcs
+from schemas.user import User as RealDBUser
 
 
 def authenticate_user(username: str, password: str):

@@ -1,4 +1,4 @@
-from app.mocks.schemas.user import UserInDB
+from mocks.schemas.user import UserInDB
 
 fake_users_db = {
     "johndoe": {

@@ -2,16 +2,15 @@ from datetime import datetime
 
 from fastapi import FastAPI
 
-from app.dependencies import db
-from app.schemas.test_message import TestMessage
+from dependencies import db
+from schemas.test_message import TestMessage
 
-from app.routers import users
+from controllers import users
 
 app = FastAPI()
 app.include_router(users.router)
 
 
-# TODO: update this when we have the real DB component from Catarina's branch
 @app.on_event("startup")
 def startup():
     db.create_connection()

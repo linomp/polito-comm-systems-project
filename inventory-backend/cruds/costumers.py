@@ -7,11 +7,12 @@ def add_costumer(new_costumer: Costumer):
     values = (NULL,
               new_costumer.name,
               new_costumer.category)
-              
+
     query = "INSERT INTO costumers(id, name, category) VALUES (%s, %s, %s)"
     db_functions.execute(query, values)
 
-    return 
+    return
+
 
 def get_costumer_from_id(costumer_id: int):
     values = (costumer_id,)
@@ -33,35 +34,27 @@ def get_costumer_from_name(name: str):
     return new_cst
 
 
-
-
-
-
-def add_user2costumer(user_id: int, cst_id: int, role:str):
-
+def add_user2costumer(user_id: int, cst_id: int, role: str):
     if (check_user2costumer(user_id, cst_id) != 0):
         return
 
-
     values = (NULL,
-          user_id,
-          cst_id,
-          role)
+              user_id,
+              cst_id,
+              role)
     query = "INSERT INTO users2costumers (id, user_id, cst_id, role) VALUES (%s, %s, %s, %s)"
     db_functions.execute(query, values)
-    
 
     return
 
+
 def check_user2costumer(user_id: int, cst_id: int):
-    
     values = (user_id, cst_id)
-    
+
     query = "SELECT * FROM users2costumers WHERE user_id=%s AND cst_id=%s"
-    data=db_functions.fetch_all(query, values)
+    data = db_functions.fetch_all(query, values)
 
     return len(data)
-
 
 
 def remove_user2costumer(user_id: int, cst_id: int):
@@ -72,12 +65,7 @@ def remove_user2costumer(user_id: int, cst_id: int):
     return
 
 
-
-
-
-
 def get_all_users_from_cst(cst_id: int):
-
     values = (cst_id,)
     query = "SELECT * FROM users2costumers WHERE cst_id=%s"
     data = db_functions.fetch_all(query, values)
@@ -85,9 +73,7 @@ def get_all_users_from_cst(cst_id: int):
     return data
 
 
-
 def update_name(cst_id: int, name: str):
-
     values = (name, cst_id)
     query = "UPDATE costumers SET name=%s WHERE id=%s"
     db_functions.execute(query, values)
@@ -96,20 +82,16 @@ def update_name(cst_id: int, name: str):
 
 
 def update_category(cst_id: int, new_categ: str):
-
     values = (new_categ, cst_id)
     query = "UPDATE costumers SET category=%s WHERE id=%s"
     db_functions.execute(query, values)
 
     return
-    
-
-
 
 
 def remove_costumer(costumer_id: int):
     values = (costumer_id,)
     query = "DELETE FROM costumers WHERE id=%s"
     db_functions.execute(query, values)
-    
-    return 
+
+    return

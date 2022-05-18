@@ -1,9 +1,9 @@
 from fastapi.security import OAuth2PasswordBearer
 from passlib.context import CryptContext
 
-from app.env import *
+from env import *
 
-from app.components.db import DBComponent
+from components.db import DBComponent
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
