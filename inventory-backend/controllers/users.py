@@ -4,12 +4,12 @@ from fastapi import APIRouter, Depends, HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
 from starlette import status
 
-from app.mocks.schemas.user import User
-from app.schemas.Token import Token
-from app.service.users import get_current_active_user, authenticate_user, create_access_token, \
+from mocks.schemas.user import User
+from schemas.Token import Token
+from services.users import get_current_active_user, authenticate_user, create_access_token, \
     get_protected_route_example, test_add_user
 
-from app.env import ACCESS_TOKEN_EXPIRE_MINUTES
+from env import ACCESS_TOKEN_EXPIRE_MINUTES
 
 router = APIRouter()
 

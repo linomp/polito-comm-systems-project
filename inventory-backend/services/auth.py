@@ -1,4 +1,4 @@
-from app.dependencies import pwd_context
+from dependencies import pwd_context
 
 
 def verify_password(plain_password, hashed_password):
