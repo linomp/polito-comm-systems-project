@@ -23,7 +23,7 @@ def test_login():
         global access_token
         global token_type
 
-        response = client.post("/users/auth", data=b"username=johndoe&password=johndoe",
+        response = client.post("/token", data=b"username=john@test.com&password=johndoe",
                                headers={
                                    'Content-Type': 'application/x-www-form-urlencoded'
                                })
@@ -45,25 +45,40 @@ def test_read_users_me():
         assert response.status_code == 200
 
         resp_body = response.json()
-        assert resp_body == {
-            "username": "johndoe",
-            "email": "johndoe@example.com",
-            "full_name": "John Doe",
-            "disabled": False
+
+        expected_response = {
+            "name": "John Doe",
+            "mail_adr": "john@test.com",
+            "rfid": None,
+            "pin": None
         }
+
+        for field in expected_response:
+            assert field in resp_body
+            assert resp_body[field] == expected_response[field]
 
 
 def test_create_user():
     with TestClient(app) as client:
         test_mail = uuid.uuid4().hex + "@example.com"
+        test_name = "CONTROLLER TEST USER"
 
         response = client.post("/users", json={
             "mail_adr": test_mail,
             "name": "CONTROLLER TEST USER",
-            "password": "johndoe"
+            "password": "password"
         })
         assert response.status_code == 200
 
         resp_body = response.json()
-        assert resp_body["mail_adr"] == test_mail
-        assert resp_body["name"] == "CONTROLLER TEST USER"
+
+        expected_response = {
+            "name": test_name,
+            "mail_adr": test_mail,
+            "rfid": None,
+            "pin": None
+        }
+
+        for field in expected_response:
+            assert field in resp_body
+            assert resp_body[field] == expected_response[field]

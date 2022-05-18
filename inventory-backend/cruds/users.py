@@ -2,6 +2,7 @@ import bcrypt
 
 from dependencies import db
 from schemas.user import User
+from services.auth import get_password_hash
 
 
 def add_user(new_user: User, password: str):
@@ -36,22 +37,6 @@ def change_password(user_id: int, pwd: str):
     return
 
 
-# TODO: move this to service/auth
-def verify_password(user_id: int, pwd: str):
-    user = get_user_from_id(user_id)
-
-    return bcrypt.checkpw(pwd.encode('utf-8'), user.hashed_pw.encode('utf-8'))
-
-
-# TODO: move this to service/auth
-def get_password_hash(password: str):
-    bytePwd = password.encode('utf-8')
-    salt = bcrypt.gensalt()
-    hashed = bcrypt.hashpw(bytePwd, salt)
-
-    return hashed, salt
-
-
 def update_users_card(user: User):  # NAO SEI SE FUNCIONA
 
     values = (user.rfid,
@@ -69,10 +54,13 @@ def get_user_from_id(user_id: int):
     query = "SELECT id, name, mail_adr, hashed_pw, salt, rfid, pin FROM users WHERE id=%s"
     data = db.fetch_one(query, values)
 
-    new_user = User(id=data[0], name=data[1], mail_adr=data[2],
-                    hashed_pw=data[3], salt=data[4], rfid=data[5], pin=data[6])
+    if not (data is None):
+        new_user = User(id=data[0], name=data[1], mail_adr=data[2],
+                        hashed_pw=data[3], salt=data[4], rfid=data[5], pin=data[6])
 
-    return new_user
+        return new_user
+    else:
+        return None
 
 
 def get_user_from_email(mail_adr: str):
@@ -80,10 +68,13 @@ def get_user_from_email(mail_adr: str):
     query = "SELECT id, name, mail_adr, hashed_pw, salt, rfid, pin FROM users WHERE mail_adr=%s"
     data = db.fetch_one(query, values)
 
-    new_user = User(id=data[0], name=data[1], mail_adr=data[2],
-                    hashed_pw=data[3], salt=data[4], rfid=data[5], pin=data[6])
+    if not (data is None):
+        new_user = User(id=data[0], name=data[1], mail_adr=data[2],
+                        hashed_pw=data[3], salt=data[4], rfid=data[5], pin=data[6])
 
-    return new_user
+        return new_user
+    else:
+        return None
 
 
 def get_user_from_rfid(rfid: int):
@@ -91,10 +82,13 @@ def get_user_from_rfid(rfid: int):
     query = "SELECT id, name, mail_adr, hashed_pw, salt, rfid, pin FROM users WHERE rfid=%s"
     data = db.fetch_one(query, values)
 
-    new_user = User(id=data[0], name=data[1], mail_adr=data[2],
-                    hashed_pw=data[3], salt=data[4], rfid=data[5], pin=data[6])
+    if not (data is None):
+        new_user = User(id=data[0], name=data[1], mail_adr=data[2],
+                        hashed_pw=data[3], salt=data[4], rfid=data[5], pin=data[6])
 
-    return new_user
+        return new_user
+    else:
+        return None
 
 
 def remove_user(user_id: int):

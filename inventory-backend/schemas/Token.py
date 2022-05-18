@@ -9,5 +9,5 @@ class Token(BaseModel):
 
 
 class TokenData(BaseModel):
-    username: Optional[str] = None
+    mail_adr: Optional[str] = None
     # TODO: add here other fields like Role, "Customer"
