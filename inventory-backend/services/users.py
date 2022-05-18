@@ -12,19 +12,15 @@ from env import *
 from schemas.Token import TokenData
 from services.auth import verify_password
 
-# TODO: replace mocks with real implementation!
-from mocks.cruds.users import get_user
-from mocks.schemas.user import User
-
 from cruds import users as user_funcs
-from schemas.user import User as RealDBUser
+from schemas.user import User, NewUserDAO
 
 
-def authenticate_user(username: str, password: str):
-    user = get_user(username)
+def authenticate_user(email: str, password: str):
+    user = user_funcs.get_user_from_email(email)
     if not user:
         return False
-    if not verify_password(password, user.hashed_password):
+    if not verify_password(password, user.hashed_pw):
         return False
     return user
 
@@ -48,33 +44,32 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
     )
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        username: str = payload.get("sub")
-        if username is None:
+        mail_adr: str = payload.get("sub")
+        if mail_adr is None:
             raise credentials_exception
-        token_data = TokenData(username=username)
+        token_data = TokenData(mail_adr=mail_adr)
     except JWTError:
         raise credentials_exception
-    user = get_user(token_data.username)
+    user = user_funcs.get_user_from_email(token_data.mail_adr)
     if user is None:
         raise credentials_exception
     return user
 
 
 async def get_current_active_user(current_user: User = Depends(get_current_user)):
-    if current_user.disabled:
-        raise HTTPException(status_code=400, detail="Inactive user")
     return current_user
 
 
 async def get_protected_route_example(current_user: User):
-    return {"message": f"Welcome to this protected route, {current_user.full_name}"}
+    return {"message": f"Welcome to this protected route, {current_user.name}"}
 
 
-def test_add_user(mail):
-    new_user = RealDBUser(id=None, name="Maria Margarida", mail_adr=mail,
-                          hashed_pw=None, salt=None, rfid=None, pin=None)
-    user_funcs.add_user(new_user, "password")
+def add_new_user(user_data: NewUserDAO):
+    new_user = User(id=None, name=user_data.name, mail_adr=user_data.mail_adr,
+                    hashed_pw=None, salt=None, rfid=None, pin=None)
 
-    created_user = user_funcs.get_user_from_email(mail)
+    user_funcs.add_user(new_user, user_data.password)
+
+    created_user = user_funcs.get_user_from_email(user_data.mail_adr)
 
     return created_user

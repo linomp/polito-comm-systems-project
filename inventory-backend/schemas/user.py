@@ -10,3 +10,9 @@ class User(BaseModel):
     salt: Optional[str]
     rfid: Optional[int]
     pin: Optional[int]
+
+
+class NewUserDAO(BaseModel):
+    name: str
+    mail_adr: str
+    password: str

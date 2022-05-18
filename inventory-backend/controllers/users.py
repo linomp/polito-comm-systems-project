@@ -4,10 +4,10 @@ from fastapi import APIRouter, Depends, HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
 from starlette import status
 
-from mocks.schemas.user import User
 from schemas.Token import Token
+from schemas.user import User, NewUserDAO
 from services.users import get_current_active_user, authenticate_user, create_access_token, \
-    get_protected_route_example, test_add_user
+    get_protected_route_example, add_new_user
 
 from env import ACCESS_TOKEN_EXPIRE_MINUTES
 
@@ -20,12 +20,12 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
     if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Incorrect username or password",
+            detail="Incorrect email or password",
             headers={"WWW-Authenticate": "Bearer"},
         )
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(
-        data={"sub": user.username}, expires_delta=access_token_expires
+        data={"sub": user.mail_adr}, expires_delta=access_token_expires
     )
     return {"access_token": access_token, "token_type": "bearer"}
 
@@ -41,8 +41,8 @@ async def protected_route_example(current_user: User = Depends(get_current_activ
     return msg
 
 
-@router.post("/add-user", tags=["test-db"])
-def add_user(mail: str):
-    created_user = test_add_user(mail)
+@router.post("/users", tags=["test-db"])
+def add_user(user_data: NewUserDAO):
+    created_user = add_new_user(user_data)
 
     return created_user
