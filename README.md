@@ -1,9 +1,16 @@
 # polito-comm-systems-project
 
-- [`DB`](./DB/) contains the .sql file to create the database and tables of the project
+- [`DB`](./DB/) contains the `.sql` script to create the database and tables of the project (`plcs_db`).
 
 - [`inventory-backend`](./inventory-backend/) contains the web service
-    - Instructions to run it on your pc are [here](./server_instructions.md)
+    - Minimal commands to run the server (requires MySQL up & running, and the `plcs_db` database already created):
+        ```
+         source venv/Scripts/activate
+         pip install -r requirements.txt
+         python -m uvicorn main:app --reload
+        ```
+         - (More details [here](./server_instructions.md))
+     
     - To run the tests, in the `inventory-backend` directory, activate the virtual environment and run `pytest`:
         ```
         source venv/Scripts/activate
