@@ -3,7 +3,14 @@
 - [`DB`](./DB/) contains the .sql file to create the database and tables of the project
 
 - [`inventory-backend`](./inventory-backend/) contains the web service
-    - Instructions to run it on your pc are [here](./server_instructions.md)
+    - Minimal commands to run the server (requires MySQL installed and the `plcs_db` database created with the script in the `DB` folder):
+        ```
+         source venv/Scripts/activate
+         pip install -r requirements.txt
+         python -m uvicorn main:app --reload
+        ```
+         - (More details [here](./server_instructions.md))
+     
     - To run the tests, in the `inventory-backend` directory, activate the virtual environment and run `pytest`:
         ```
         source venv/Scripts/activate
