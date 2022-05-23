@@ -1,9 +1,9 @@
 # polito-comm-systems-project
 
-- [`DB`](./DB/) contains the .sql file to create the database and tables of the project
+- [`DB`](./DB/) contains the `.sql` script to create the database and tables of the project (`plcs_db`).
 
 - [`inventory-backend`](./inventory-backend/) contains the web service
-    - Minimal commands to run the server (requires MySQL installed and the `plcs_db` database created with the script in the `DB` folder):
+    - Minimal commands to run the server (requires MySQL up & running, and the `plcs_db` database already created):
         ```
          source venv/Scripts/activate
          pip install -r requirements.txt
