@@ -3,7 +3,7 @@
 - [`DB`](./DB/) contains the `.sql` script to create the database and tables of the project (`plcs_db`).
 
 - [`inventory-backend`](./inventory-backend/) contains the web service
-    - Minimal commands to run the server (requires MySQL up & running, and the `plcs_db` database already created):
+    - Minimal commands to run the server (by default connects to our MySQL instance running on Digital Ocean):
         ```
          source venv/Scripts/activate
          pip install -r requirements.txt
