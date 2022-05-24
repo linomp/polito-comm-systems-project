@@ -23,7 +23,7 @@ def test_login():
         global access_token
         global token_type
 
-        response = client.post("/token", data=b"username=john@test.com&password=johndoe",
+        response = client.post("/token", data=b"username=john@test.com&password=password",
                                headers={
                                    'Content-Type': 'application/x-www-form-urlencoded'
                                })
