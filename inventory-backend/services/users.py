@@ -73,3 +73,12 @@ def add_new_user(user_data: NewUserDAO):
     created_user = user_funcs.get_user_from_email(user_data.mail_adr)
 
     return created_user
+
+def updt_users_card(user_id, card_data):
+    user=user_funcs.get_user_from_id(user_id)
+    user.rfid = card_data.rfid
+    user.pin = card_data.pin
+    
+    user_funcs.update_users_card(user)
+
+    return user_funcs.get_user_from_id(user_id)
