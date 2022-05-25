@@ -82,3 +82,36 @@ def test_create_user():
         for field in expected_response:
             assert field in resp_body
             assert resp_body[field] == expected_response[field]
+
+
+def test_update_card():
+    with TestClient(app) as client:
+        test_mail = uuid.uuid4().hex + "@example.com"
+        test_name = "CONTROLLER TEST USER"
+
+        response = client.post("/users", json={
+            "mail_adr": test_mail,
+            "name": "CONTROLLER TEST USER",
+            "password": "password"
+        })
+        assert response.status_code == 200
+
+        resp_body = response.json()
+
+        expected_response = {
+            "rfid": 1234,
+            "pin": 5678
+        }
+
+        response_card = client.post("/users/card", json={
+            "id": resp_body["id"],
+            "rfid": expected_response["rfid"],
+            "pin": expected_response["pin"]
+        })
+        assert response_card.status_code == 200
+
+        resp_card = response_card.json()
+        print(resp_card)
+
+        assert resp_card["rfid"] == expected_response["rfid"]
+        assert resp_card["pin"] == expected_response["pin"]

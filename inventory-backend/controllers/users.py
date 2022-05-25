@@ -3,11 +3,12 @@ from datetime import timedelta
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
 from starlette import status
+from cruds.users import update_users_card
 
 from schemas.Token import Token
 from schemas.user import User, NewUserDAO
-from services.users import get_current_active_user, authenticate_user, create_access_token, \
-    get_protected_route_example, add_new_user
+from schemas.card import NewCardDAO
+from services.users import *
 
 from env import ACCESS_TOKEN_EXPIRE_MINUTES
 
@@ -46,3 +47,10 @@ def add_user(user_data: NewUserDAO):
     created_user = add_new_user(user_data)
 
     return created_user
+
+
+@router.post("/users/card", tags=["test-db"])
+def updt_card(card_data: NewCardDAO):
+    user = updt_users_card(card_data.id, card_data)
+
+    return user
