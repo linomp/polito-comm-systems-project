@@ -7,12 +7,13 @@ from env import *
 
 
 class DBComponent:
-    def __init__(self, host_name=DB_HOST, user_name=DB_USER, user_password=DB_PASSWORD, database=DB_NAME):
+    def __init__(self, host_name=DB_HOST, user_name=DB_USER, user_password=DB_PASSWORD, database=DB_NAME, port=DB_PORT):
         self.connection = None
         self.host_name = host_name
         self.user_name = user_name
         self.user_password = user_password
         self.database = database
+        self.port = port
 
     def create_connection(self):
         try:
@@ -20,7 +21,8 @@ class DBComponent:
                 host=self.host_name,
                 user=self.user_name,
                 passwd=self.user_password,
-                database=self.database
+                database=self.database,
+                port=self.port
             )
             print("Connection to MySQL DB successful")
         except Error as e:
