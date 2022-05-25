@@ -43,7 +43,7 @@ async def protected_route_example(current_user: User = Depends(get_current_activ
 
 
 @router.post("/users", tags=["test-db"])
-def add_user(user_data: NewUserDAO):
+def create_user(user_data: NewUserDAO):
     created_user = add_new_user(user_data)
 
     return created_user
