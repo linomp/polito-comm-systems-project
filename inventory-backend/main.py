@@ -7,10 +7,11 @@ from fastapi.middleware.cors import CORSMiddleware
 from dependencies import db
 from schemas.test_message import TestMessage
 
-from controllers import users
+from controllers import users, customers
 
 app = FastAPI()
 app.include_router(users.router)
+app.include_router(customers.router)
 
 origins = ["*"]
 
