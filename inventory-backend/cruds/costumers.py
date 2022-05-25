@@ -1,5 +1,4 @@
 from asyncio.windows_events import NULL
-from core import db_functions
 from schemas.costumer import Costumer
 
 
