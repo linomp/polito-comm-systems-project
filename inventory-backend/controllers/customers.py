@@ -1,14 +1,13 @@
-from schemas.costumer import Costumer
+from fastapi import APIRouter
+
+from schemas.costumer import NewCostumerDAO, Costumer
+from services.customers import create_new_customer
+
+router = APIRouter()
 
 
-@router.post("/users", tags=["test-db"])
-def add_new_customer(customer_data: Costumer):
-    new_customer = Costumer(id=customer_data.id, name=customer_data.name, category=customer_data.category)
-
-    customer_funcs.create_customer(new_customer)
-
-    created_user = user_funcs.get_user_from_email(customer_data.mail_adr)
+@router.post("/customers", tags=["customers"])
+def add_new_customer(customer_data: NewCostumerDAO):
+    created_user = create_new_customer(Costumer(**customer_data.dict()))
 
     return created_user
-
-# 443

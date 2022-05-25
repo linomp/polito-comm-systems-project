@@ -49,8 +49,6 @@ def test_read_users_me():
         expected_response = {
             "name": "John Doe",
             "mail_adr": "john@test.com",
-            "rfid": None,
-            "pin": None
         }
 
         for field in expected_response:
@@ -65,7 +63,7 @@ def test_create_user():
 
         response = client.post("/users", json={
             "mail_adr": test_mail,
-            "name": "CONTROLLER TEST USER",
+            "name": test_name,
             "password": "password"
         })
         assert response.status_code == 200
@@ -86,11 +84,8 @@ def test_create_user():
 
 def test_update_card():
     with TestClient(app) as client:
-        test_mail = uuid.uuid4().hex + "@example.com"
-        test_name = "CONTROLLER TEST USER"
-
         response = client.post("/users", json={
-            "mail_adr": test_mail,
+            "mail_adr": uuid.uuid4().hex + "@example.com",
             "name": "CONTROLLER TEST USER",
             "password": "password"
         })
@@ -99,8 +94,8 @@ def test_update_card():
         resp_body = response.json()
 
         expected_response = {
-            "rfid": 1234,
-            "pin": 5678
+            "rfid": uuid.uuid4().hex,
+            "pin": 1234
         }
 
         response_card = client.post("/users/card", json={
@@ -111,7 +106,29 @@ def test_update_card():
         assert response_card.status_code == 200
 
         resp_card = response_card.json()
-        print(resp_card)
 
         assert resp_card["rfid"] == expected_response["rfid"]
         assert resp_card["pin"] == expected_response["pin"]
+
+
+def test_create_customer():
+    with TestClient(app) as client:
+        test_name = uuid.uuid4().hex
+        test_category = "CUSTOMER CATEGORY TEST"
+
+        response = client.post("/customers", json={
+            "name": test_name,
+            "category": test_category
+        })
+        assert response.status_code == 200
+
+        resp_body = response.json()
+
+        expected_response = {
+            "name": test_name,
+            "category": test_category
+        }
+
+        for field in expected_response:
+            assert field in resp_body
+            assert resp_body[field] == expected_response[field]

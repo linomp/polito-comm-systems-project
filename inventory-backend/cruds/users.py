@@ -1,5 +1,3 @@
-import bcrypt
-
 from dependencies import db
 from schemas.user import User
 from services.auth import get_password_hash
@@ -37,8 +35,7 @@ def change_password(user_id: int, pwd: str):
     return
 
 
-def update_users_card(user: User): 
-
+def update_users_card(user: User):
     values = (user.rfid,
               user.pin,
               user.id

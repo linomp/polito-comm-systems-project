@@ -8,7 +8,7 @@ class User(BaseModel):
     mail_adr: str
     hashed_pw: Optional[str]
     salt: Optional[str]
-    rfid: Optional[int]
+    rfid: Optional[str]
     pin: Optional[int]
 
 
