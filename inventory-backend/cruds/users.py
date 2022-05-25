@@ -37,7 +37,7 @@ def change_password(user_id: int, pwd: str):
     return
 
 
-def update_users_card(user: User):  # NAO SEI SE FUNCIONA
+def update_users_card(user: User): 
 
     values = (user.rfid,
               user.pin,
