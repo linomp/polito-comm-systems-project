@@ -47,8 +47,8 @@ class DBComponent:
             self.connection.commit()
             print("Query executed")
         except Error as e:
-            print(f"The error '{e}' occurred")
             self.connection.rollback()
+            raise Exception(e)
         cursor.close()
 
         return
