@@ -1,10 +1,9 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter
 from fastapi.security import OAuth2PasswordRequestForm
 
 from schemas.Token import Token
-from schemas.card import NewCardDAO
 from services.users import *
-from services.custom_exceptions import *
+from components.custom_exceptions import *
 
 from env import ACCESS_TOKEN_EXPIRE_MINUTES
 
@@ -63,5 +62,3 @@ def login_from_rfid_card(card_data: NewCardDAO):
         raise HTTPException(status_code=401, detail="Wrong pin")
     except InvalidCardIDException:
         raise HTTPException(status_code=404, detail="Card is Invalid")
-   
-   
