@@ -111,7 +111,7 @@ def test_update_card():
             "pin": 1234
         }
 
-        response_card = client.post("/users/card",
+        response_card = client.post("/users/card/update_card",
                                     headers={'Authorization': f'{resp_body["token_type"]} {resp_body["access_token"]}'},
                                     json={
                                         "rfid": expected_response["rfid"],
@@ -123,3 +123,58 @@ def test_update_card():
 
         assert resp_card["rfid"] == expected_response["rfid"]
         assert resp_card["pin"] == expected_response["pin"]
+
+
+
+def test_login_card():
+    with TestClient(app) as client:
+        # Create new user
+        test_mail = uuid.uuid4().hex + "@example.com"
+        test_password = "password"
+        response = client.post("/users", json={
+            "mail_adr": test_mail,
+            "name": "CONTROLLER TEST USER",
+            "password": "password"
+        })
+        assert response.status_code == 200
+
+        # Login with that user
+        response = client.post("/token", data=f"username={test_mail}&password={test_password}".encode('utf-8'),
+                               headers={
+                                   'Content-Type': 'application/x-www-form-urlencoded'
+                               })
+        assert response.status_code == 200
+
+        resp_body = response.json()
+        assert "access_token" in resp_body
+        assert "token_type" in resp_body
+
+        # Perform card update operation
+        expected_response = {
+            "rfid": uuid.uuid4().hex,
+            "pin": 1234
+        }
+
+        response_card = client.post("/users/card/update_card",
+                                    headers={'Authorization': f'{resp_body["token_type"]} {resp_body["access_token"]}'},
+                                    json={
+                                        "rfid": expected_response["rfid"],
+                                        "pin": expected_response["pin"]
+                                    })
+        assert response_card.status_code == 200
+
+        resp_card = response_card.json()
+
+        assert resp_card["rfid"] == expected_response["rfid"]
+        assert resp_card["pin"] == expected_response["pin"]
+
+        #login with card
+        response_login = client.post("/users/card/login",
+                                    json={"rfid": resp_card["rfid"],
+                                        "pin": resp_card["pin"]})
+        assert response.status_code == 200
+
+        resp_login = response_login.json()
+
+        assert resp_login["mail_adr"] == test_mail
+    
