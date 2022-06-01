@@ -125,28 +125,6 @@ def test_update_card():
         assert resp_card["pin"] == expected_response["pin"]
 
 
-def test_create_customer():
-    with TestClient(app) as client:
-        test_name = uuid.uuid4().hex
-        test_category = "CUSTOMER CATEGORY TEST"
-
-        response = client.post("/customers", json={
-            "name": test_name,
-            "category": test_category
-        })
-        assert response.status_code == 200
-
-        resp_body = response.json()
-
-        expected_response = {
-            "name": test_name,
-            "category": test_category
-        }
-
-        for field in expected_response:
-            assert field in resp_body
-            assert resp_body[field] == expected_response[field]
-
 
 def test_login_card():
     with TestClient(app) as client:
