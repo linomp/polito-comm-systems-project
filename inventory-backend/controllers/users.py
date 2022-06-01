@@ -45,7 +45,7 @@ def create_user(user_data: NewUserDAO):
 
 
 @router.post("/users/card", tags=["users"])
-def update_user_rfid_card(card_data: NewCardDAO):
-    user = updt_users_card(card_data.id, card_data)
+def update_user_rfid_card(card_data: NewCardDAO, current_user: User = Depends(get_current_active_user)):
+    user = updt_users_card(current_user.id, card_data)
 
     return user
