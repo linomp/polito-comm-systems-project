@@ -1,4 +1,4 @@
-#pip install -r requirements.txt
+pip install -r requirements.txt
 
 export MYSQL_HOST=localhost
 export MYSQL_USER=root

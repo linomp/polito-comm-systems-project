@@ -1,9 +1,10 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
 
 from schemas.Token import Token
 from schemas.card import NewCardDAO
 from services.users import *
+from services.custom_exceptions import *
 
 from env import ACCESS_TOKEN_EXPIRE_MINUTES
 
@@ -44,8 +45,23 @@ def create_user(user_data: NewUserDAO):
     return created_user
 
 
-@router.post("/users/card", tags=["users"])
+@router.post("/users/card/update_card", tags=["users"])
 def update_user_rfid_card(card_data: NewCardDAO, current_user: User = Depends(get_current_active_user)):
     user = updt_users_card(current_user.id, card_data)
 
     return user
+
+
+@router.post("/users/card/login", tags=["users"])
+def login_from_rfid_card(card_data: NewCardDAO):
+    try:
+        user = login_from_card(card_data)
+
+        return user
+
+    except WrongPinException:
+        raise HTTPException(status_code=401, detail="Wrong pin")
+    except InvalidCardIDException:
+        raise HTTPException(status_code=404, detail="Card is Invalid")
+   
+   
