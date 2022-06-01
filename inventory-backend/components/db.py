@@ -3,6 +3,7 @@ import sys
 import mysql.connector as con
 from mysql.connector import Error
 
+from components.custom_exceptions import DatabaseException
 from env import *
 
 
@@ -37,8 +38,6 @@ class DBComponent:
             print(f"The error '{e}' occurred")
         return
 
-    # TODO: refactor to actually return the error upstream.
-    #       If something goes wrong, it gets lost here and then we have no fucking idea
     def execute(self, query, data):
         cursor = self.connection.cursor()
 
@@ -48,9 +47,10 @@ class DBComponent:
             print("Query executed")
         except Error as e:
             self.connection.rollback()
-            raise Exception(e)
-        cursor.close()
+            print(f"The error '{e}' occurred")
+            raise DatabaseException(e)
 
+        cursor.close()
         return
 
     def fetch_all(self, query, data):
@@ -62,8 +62,9 @@ class DBComponent:
             result = cursor.fetchall()
         except Error as e:
             print(f"The error '{e}' occurred")
-        cursor.close()
+            raise DatabaseException(e)
 
+        cursor.close()
         return result
 
     def fetch_one(self, query, data):
@@ -75,6 +76,7 @@ class DBComponent:
             result = cursor.fetchone()
         except Error as e:
             print(f"The error '{e}' occurred")
-        cursor.close()
+            raise DatabaseException(e)
 
+        cursor.close()
         return result

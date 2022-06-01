@@ -11,7 +11,7 @@ from env import *
 
 from schemas.Token import TokenData
 from services.auth import verify_password
-from services.custom_exceptions import *
+from components.custom_exceptions import *
 
 from cruds import users as user_funcs
 from schemas.user import User, NewUserDAO
@@ -88,11 +88,10 @@ def updt_users_card(user_id: int, card_data: NewCardDAO):
 
 
 def login_from_card(card_data: NewCardDAO):
-
     user = user_funcs.get_user_from_rfid(card_data.rfid)
     if not user:
         raise InvalidCardIDException
     if user.pin != card_data.pin:
         raise WrongPinException
-    
-    return user 
+
+    return user

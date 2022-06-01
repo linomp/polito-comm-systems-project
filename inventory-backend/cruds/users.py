@@ -74,7 +74,7 @@ def get_user_from_email(mail_adr: str):
         return None
 
 
-def get_user_from_rfid(rfid: int):
+def get_user_from_rfid(rfid: str):
     values = (rfid,)
     query = "SELECT id, name, mail_adr, hashed_pw, salt, rfid, pin FROM users WHERE rfid=%s"
     data = db.fetch_one(query, values)
