@@ -50,7 +50,6 @@ def update_user_rfid_card(card_data: NewCardDAO, current_user: User = Depends(ge
 
     return user
 
-
 @router.post("/users/card/login", tags=["users"])
 def login_from_rfid_card(card_data: NewCardDAO):
     try:
@@ -62,3 +61,22 @@ def login_from_rfid_card(card_data: NewCardDAO):
         raise HTTPException(status_code=401, detail="Wrong pin")
     except InvalidCardIDException:
         raise HTTPException(status_code=404, detail="Card is Invalid")
+
+
+@router.post("/users/employees/add_client", tags=["users"])
+def add_client_to_cst(new_client_id: int, costumer_id: int, current_user: User = Depends(get_current_active_user)):
+
+    try:
+        check_if_employee(current_user.id, costumer_id)
+
+        add_client(new_client_id, costumer_id)
+
+        return 
+    except NotAssociatedException:
+        raise HTTPException(status_code=403, detail="You are not associated to costumer")
+    except NoPermissionException:
+        raise HTTPException(status_code=403, detail="You don't have permission")
+    except AlreadyClientException:
+        raise HTTPException(status_code=400, detail="User is already a client")
+    except AlreadyEmployeeException:
+        raise HTTPException(status_code=400, detail="User is already an employee")

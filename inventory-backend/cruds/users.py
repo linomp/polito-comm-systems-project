@@ -94,3 +94,16 @@ def remove_user(user_id: int):
     db.execute(query, values)
 
     return
+
+
+
+def get_role_costumer(user_id: int, costumer_id: int):
+    values = (user_id,
+              costumer_id)
+    query = "SELECT role FROM users2costumers WHERE user_id=%s AND cst_id=%s"
+    data = db.fetch_one(query, values)
+
+    if data == None:
+        return None
+    else: 
+        return data[0] 
