@@ -16,3 +16,15 @@ class DefaultUserCreationException(Exception):
 
 class DatabaseException(Exception):
     pass
+
+class NoPermissionException(Exception):
+    pass
+
+class NotAssociatedException(Exception):
+    pass
+
+class AlreadyClientException(Exception):
+    pass
+
+class AlreadyEmployeeException(Exception):
+    pass

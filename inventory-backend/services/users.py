@@ -11,12 +11,18 @@ from env import *
 
 from schemas.Token import TokenData
 from services.auth import verify_password
+
+from components.constants import *
 from components.custom_exceptions import *
 
 from cruds import users as user_funcs
+from cruds import costumers as cst_funcs
 from schemas.user import User, NewUserDAO
 from schemas.card import NewCardDAO
 
+#---------------------------------------------------
+# -------------- ALL USERS FUNCTIONS  --------------
+#--------------------------------------------------- 
 
 def authenticate_user(email: str, password: str):
     user = user_funcs.get_user_from_email(email)
@@ -95,3 +101,29 @@ def login_from_card(card_data: NewCardDAO):
         raise WrongPinException
 
     return user
+
+
+
+#---------------------------------------------------
+# -------------- EMPLOYEES FUNCTIONS  --------------
+#--------------------------------------------------- 
+
+def check_if_employee(user_id: int, costumer_id: int):
+    role = user_funcs.get_role_costumer(user_id, costumer_id)
+    if not role:
+        raise NotAssociatedException
+    if role==USER_ROLE_CLIENT:
+        raise NoPermissionException
+    
+    return role
+
+def add_client(new_client: int, cst_id: int):
+    role = user_funcs.get_role_costumer(new_client, cst_id)
+    if role==USER_ROLE_CLIENT:
+        raise AlreadyClientException
+    if role==USER_ROLE_ADMIN or role==USER_ROLE_OPERATOR:
+        raise AlreadyEmployeeException
+            
+    cst_funcs.add_user2costumer(new_client, cst_id, USER_ROLE_CLIENT)
+
+    return 

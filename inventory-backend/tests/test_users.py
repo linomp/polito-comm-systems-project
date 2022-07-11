@@ -2,6 +2,8 @@ import uuid
 
 from fastapi.testclient import TestClient
 
+from components.constants import *
+
 from main import app
 
 global access_token
@@ -178,3 +180,46 @@ def test_login_card():
 
         assert resp_login["mail_adr"] == test_mail
     
+
+
+def test_add_client_to_cst():
+    with TestClient(app) as client:
+        # Create new customer
+        test_name = uuid.uuid4().hex
+        test_category = "CUSTOMER CATEGORY TEST"
+
+        response = client.post("/customers", json={
+            "name": test_name,
+            "category": test_category
+        })
+        assert response.status_code == 200
+        resp_costumer = response.json()
+
+        # Create new user
+        test_mail = uuid.uuid4().hex + "@example.com"
+        response = client.post("/users", json={
+            "mail_adr": test_mail,
+            "name": "CONTROLLER TEST USER",
+            "password": "password"
+        })
+        assert response.status_code == 200
+        resp_user = response.json()
+
+        test_cst_mail=test_name + DEFAULT_ADMIN_USER_SUFFIX
+
+        # Log in with admin
+        response = client.post("/token", data=f"username={test_cst_mail}&password={DEFAULT_USER_PASSWORD}".encode('utf-8'),
+                               headers={
+                                   'Content-Type': 'application/x-www-form-urlencoded'
+                               })
+        assert response.status_code == 200
+
+        resp_login = response.json()
+        assert "access_token" in resp_login
+        assert "token_type" in resp_login
+        
+
+        #test adding client
+        response = client.post(f"/users/employees/add_client?new_client_id={resp_user['id']}&costumer_id={resp_costumer['id']}",
+                                    headers={'Authorization': f'{resp_login["token_type"]} {resp_login["access_token"]}'})
+        assert response.status_code == 200
