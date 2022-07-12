@@ -3,6 +3,8 @@ from fastapi.security import OAuth2PasswordRequestForm
 
 from schemas.Token import Token
 from services.users import *
+from cruds import users as user_funcs
+from cruds import costumers as cst_funcs
 from components.custom_exceptions import *
 
 from env import ACCESS_TOKEN_EXPIRE_MINUTES
@@ -67,11 +69,21 @@ def login_from_rfid_card(card_data: NewCardDAO):
 def add_client_to_cst(new_client_id: int, costumer_id: int, current_user: User = Depends(get_current_active_user)):
 
     try:
-        check_if_employee(current_user.id, costumer_id)
+        if not user_funcs.get_user_from_id(new_client_id):
+            raise InvalidUserIDException
 
+        if not cst_funcs.get_costumer_from_id(costumer_id):
+            raise InvalidCostumerIDException
+
+
+        check_if_employee(current_user.id, costumer_id)
         add_client(new_client_id, costumer_id)
 
         return 
+    except InvalidCostumerIDException:
+        raise HTTPException(status_code=404, detail="Invalid costumer ID")
+    except InvalidUserIDException:
+        raise HTTPException(status_code=404, detail="Invalid user ID")
     except NotAssociatedException:
         raise HTTPException(status_code=403, detail="You are not associated to costumer")
     except NoPermissionException:
@@ -80,3 +92,33 @@ def add_client_to_cst(new_client_id: int, costumer_id: int, current_user: User =
         raise HTTPException(status_code=400, detail="User is already a client")
     except AlreadyEmployeeException:
         raise HTTPException(status_code=400, detail="User is already an employee")
+
+
+
+@router.post("/users/admin/add_employee", tags=["users"])
+def add_client_to_cst(new_employee_id: int, costumer_id: int, current_user: User = Depends(get_current_active_user)):
+
+    try:
+        if not user_funcs.get_user_from_id(new_employee_id):
+            raise InvalidUserIDException
+
+        if not cst_funcs.get_costumer_from_id(costumer_id):
+            raise InvalidCostumerIDException        
+
+        check_if_admin(current_user.id, costumer_id)
+        add_employee(new_employee_id, costumer_id)
+
+        return 
+    except InvalidCostumerIDException:
+        raise HTTPException(status_code=404, detail="Invalid costumer ID")
+    except InvalidUserIDException:
+        raise HTTPException(status_code=404, detail="Invalid user ID")
+    except NotAssociatedException:
+        raise HTTPException(status_code=403, detail="You are not associated to costumer")
+    except NoPermissionException:
+        raise HTTPException(status_code=403, detail="You don't have permission")
+    except AlreadyClientException:
+        raise HTTPException(status_code=400, detail="User is already a client")
+    except AlreadyEmployeeException:
+        raise HTTPException(status_code=400, detail="User is already an employee")
+

@@ -127,3 +127,30 @@ def add_client(new_client: int, cst_id: int):
     cst_funcs.add_user2costumer(new_client, cst_id, USER_ROLE_CLIENT)
 
     return 
+
+
+#---------------------------------------------------
+# ------------- ADMIN ONLY FUNCTIONS  --------------
+#--------------------------------------------------- 
+
+
+def check_if_admin(user_id: int, costumer_id: int):
+    role = user_funcs.get_role_costumer(user_id, costumer_id)
+    if not role:
+        raise NotAssociatedException
+    if role!=USER_ROLE_ADMIN:
+        raise NoPermissionException
+    
+    return role
+
+def add_employee(new_empl: int, cst_id: int):
+    role = user_funcs.get_role_costumer(new_empl, cst_id)
+    if role==USER_ROLE_ADMIN or role==USER_ROLE_OPERATOR:
+        raise AlreadyEmployeeException
+    
+    if role==USER_ROLE_CLIENT:
+        cst_funcs.remove_user2costumer(new_empl, cst_id)
+
+    cst_funcs.add_user2costumer(new_empl, cst_id, USER_ROLE_OPERATOR)
+
+    return 
