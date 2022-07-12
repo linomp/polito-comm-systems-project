@@ -13,6 +13,13 @@ def add_costumer(new_costumer: Costumer):
 
     return
 
+def get_list_all_cst():
+    values=()
+    query = "SELECT * FROM costumers"
+    data = db.fetch_all(query, values)
+
+    return data
+
 
 def get_costumer_from_id(costumer_id: int):
     values = (costumer_id,)
