@@ -16,7 +16,7 @@ def add_new_customer(customer_data: NewCostumerDAO):
         raise HTTPException(status_code=500, detail=str(e))
 
 
-@router.post("/customers/all_cst", tags=["customers"])
+@router.get("/customers/all_cst", tags=["customers"])
 def get_all_costumers():
     data= cst_func.get_list_all_cst()
 
