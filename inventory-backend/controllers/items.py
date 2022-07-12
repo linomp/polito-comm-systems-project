@@ -1,7 +1,5 @@
 from fastapi import APIRouter, Query
-from tables import Description
 from schemas.item import NewItemDAO
-
 
 from services.users import *
 from schemas.user import *
@@ -19,7 +17,6 @@ async def add_item_to_cst(item_data: NewItemDAO, cst_id: int, current_user: User
         if not cst_funcs.get_costumer_from_id(cst_id):
             raise InvalidCostumerIDException
 
-        
         check_if_admin(current_user.id, cst_id)
 
         if item_data.name == "None" or item_data.category == "None":
@@ -38,7 +35,7 @@ async def add_item_to_cst(item_data: NewItemDAO, cst_id: int, current_user: User
                         rfid=item_data.rfid)
         item_funcs.add_item(new_item)
 
-        return 
+        return
     except InvalidItemNameorCategException:
         raise HTTPException(status_code=403, detail="Invalid Item name or Category")
     except InvalidCostumerIDException:
@@ -47,4 +44,3 @@ async def add_item_to_cst(item_data: NewItemDAO, cst_id: int, current_user: User
         raise HTTPException(status_code=401, detail="You are not associated to costumer")
     except NoPermissionException:
         raise HTTPException(status_code=401, detail="You don't have permission")
-
