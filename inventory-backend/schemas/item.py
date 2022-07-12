@@ -8,4 +8,21 @@ class Item(BaseModel):
     description: Optional[str]
     category: str
     costumer_id: int
-    rfid: Optional[int]
+    rfid: Optional[str]
+
+class NewItemDAO(BaseModel):
+    name: str
+    description: Optional[str]
+    category: str
+    rfid: Optional[str]
+
+    class Config:
+        schema_extra = {
+            "example": {
+                "name": "None",
+                "description":"None",
+                "category": "None",
+                "rfid": "None"
+            }
+        }
+    

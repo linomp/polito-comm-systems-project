@@ -1,3 +1,4 @@
+
 class WrongPinException(Exception):
     pass
 
@@ -5,6 +6,11 @@ class WrongPinException(Exception):
 class InvalidCardIDException(Exception):
     pass
 
+class InvalidUserIDException(Exception):
+    pass
+
+class InvalidCostumerIDException(Exception):
+    pass
 
 class CustomerCreationException(Exception):
     pass
@@ -27,4 +33,7 @@ class AlreadyClientException(Exception):
     pass
 
 class AlreadyEmployeeException(Exception):
+    pass
+
+class InvalidItemNameorCategException(Exception):
     pass
