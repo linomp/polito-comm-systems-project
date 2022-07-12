@@ -11,7 +11,7 @@ def test_create_customer():
         test_name = uuid.uuid4().hex
         test_category = "CUSTOMER CATEGORY TEST"
 
-        response = client.post("/customers", json={
+        response = client.post("/customers/new_cst", json={
             "name": test_name,
             "category": test_category
         })
