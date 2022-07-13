@@ -19,10 +19,10 @@ class NewItemDAO(BaseModel):
     class Config:
         schema_extra = {
             "example": {
-                "name": "None",
-                "description":"None",
-                "category": "None",
-                "rfid": "None"
+                "name": "",
+                "description":"",
+                "category": "",
+                "rfid": ""
             }
         }
     
