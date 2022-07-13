@@ -46,16 +46,35 @@ async def protected_route_example(current_user: User = Depends(get_current_activ
 
 @router.post("/users", tags=["users"])
 async def create_user(user_data: NewUserDAO):
-    created_user = add_new_user(user_data)
+    try:
+        if user_funcs.get_user_from_email:
+            raise InvalidEmailException
+        if user_funcs.get_user_from_rfid:
+            raise InvalidRFIDException
 
-    return created_user
+        created_user = add_new_user(user_data)
+
+        return created_user
+    except InvalidEmailException:
+        raise HTTPException(status_code=403, detail="Email already in use")
+    except InvalidRFIDException:
+        raise HTTPException(status_code=403, detail="RFID already in use")
+
+
 
 
 @router.post("/users/card/update_card", tags=["users"])
 async def update_user_rfid_card(card_data: NewCardDAO, current_user: User = Depends(get_current_active_user)):
-    user = updt_users_card(current_user.id, card_data)
+    try:
+        if user_funcs.get_user_from_rfid:
+            raise InvalidRFIDException
+            
+        user = updt_users_card(current_user.id, card_data)
 
-    return user
+        return user
+    except InvalidRFIDException:
+        raise HTTPException(status_code=403, detail="RFID already in use")
+
 
 
 @router.post("/users/card/login", tags=["users"])
@@ -125,3 +144,19 @@ async def add_client_to_cst(new_employee_id: int, costumer_id: int,
         raise HTTPException(status_code=400, detail="User is already a client")
     except AlreadyEmployeeException:
         raise HTTPException(status_code=400, detail="User is already an employee")
+
+
+@router.get("/users/view_my_cst", tags=["users"])
+async def get_user_associated_cst(current_user: User = Depends(get_current_active_user)):
+    data = user_funcs.get_all_csts_from_user(current_user.id)
+
+    cst_list = []
+    idx = len(data)
+    for i in range(idx):
+        aux=cst_funcs.get_costumer_from_id(data[i][2])
+        cst_list.append({"id": aux.id,
+                         "name": aux.name,
+                         "category": aux.category,
+                         "role": data[i][3]})
+
+    return cst_list

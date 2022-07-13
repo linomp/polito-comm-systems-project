@@ -27,6 +27,9 @@ async def add_item_to_cst(item_data: NewItemDAO, cst_id: int, current_user: User
 
         if item_data.rfid == "":
             item_data.rfid = None
+        elif item_funcs.get_item_from_rfid(item_data.rfid):
+            raise InvalidRFIDException
+        
 
         new_item = Item(name=item_data.name,
                         description=item_data.description,
@@ -38,6 +41,8 @@ async def add_item_to_cst(item_data: NewItemDAO, cst_id: int, current_user: User
         return
     except InvalidItemException:
         raise HTTPException(status_code=403, detail="Invalid Item name or Category")
+    except InvalidRFIDException:
+        raise HTTPException(status_code=403, detail="RFID already in use")
     except InvalidCostumerIDException:
         raise HTTPException(status_code=403, detail="Invalid costumer ID")
     except NotAssociatedException:
@@ -47,7 +52,7 @@ async def add_item_to_cst(item_data: NewItemDAO, cst_id: int, current_user: User
 
 
 @router.post("/item/remove_item", tags=["items"])
-async def add_item_to_cst(item_id: int, current_user: User = Depends(get_current_active_user)):
+async def rmv_item(item_id: int, current_user: User = Depends(get_current_active_user)):
     try:
         rmv_item = item_funcs.get_item_from_id(item_id)
         if not rmv_item:

@@ -8,10 +8,11 @@ def add_item(new_item: Item):
               new_item.description,
               new_item.category,
               new_item.costumer_id,
-              new_item.rfid
+              new_item.rfid,
+              None
               )
 
-    query = "INSERT INTO items (id, name, description, category, costumer_id, rfid) VALUES (%s, %s, %s, %s, %s, %s)"
+    query = "INSERT INTO items (id, name, description, category, costumer_id, rfid, renter_user_id) VALUES (%s, %s, %s, %s, %s, %s, %s)"
     db.execute(query, values)
 
     return
@@ -19,24 +20,24 @@ def add_item(new_item: Item):
 
 def get_item_from_id(item_id: int):
     values = (item_id,)
-    query = "SELECT id, name, description, category, costumer_id, rfid FROM items WHERE id=%s"
+    query = "SELECT id, name, description, category, costumer_id, rfid, renter_user_id FROM items WHERE id=%s"
     data = db.fetch_one(query, values)
 
     if not (data is None):
         new_item = Item(id=data[0], name=data[1], description=data[2], category=data[3],
-                        costumer_id=data[4], rfid=data[5])
+                        costumer_id=data[4], rfid=data[5], renter_user_id=data[6])
 
         return new_item
 
 
 def get_item_from_rfid(item_rfid: int):
     values = (item_rfid,)
-    query = "SELECT id, name, description, category, costumer_id, rfid FROM items WHERE rfid=%s"
+    query = "SELECT id, name, description, category, costumer_id, rfid, renter_user_id FROM items WHERE rfid=%s"
     data = db.fetch_one(query, values)
 
     if not (data is None):
         new_item = Item(id=data[0], name=data[1], description=data[2], category=data[3],
-                        costumer_id=data[4], rfid=data[5])
+                        costumer_id=data[4], rfid=data[5], renter_user_id=data[6])
 
         return new_item
 
