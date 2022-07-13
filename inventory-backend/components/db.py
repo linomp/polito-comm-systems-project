@@ -17,13 +17,19 @@ class DBComponent:
         self.port = port
 
     def create_connection(self):
+        # By default, `autocommit` option is set to False, whenever you use a pool of
+        # connections or a single connection; this allow to each connection work as in
+        # a different session, and any change will not be applied or see be visible by
+        # other sessions until commit is invoked
+        # source: https://bugs.mysql.com/bug.php?id=102053
         try:
             self.connection = con.connect(
                 host=self.host_name,
                 user=self.user_name,
                 passwd=self.user_password,
                 database=self.database,
-                port=self.port
+                port=self.port,
+                autocommit=True
             )
             print("Connection to MySQL DB successful")
         except Error as e:
