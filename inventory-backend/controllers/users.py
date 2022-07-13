@@ -120,3 +120,19 @@ async def add_client_to_cst(new_employee_id: int, costumer_id: int,
         raise HTTPException(status_code=400, detail="User is already a client")
     except AlreadyEmployeeException:
         raise HTTPException(status_code=400, detail="User is already an employee")
+
+
+@router.get("/users/view_my_cst", tags=["users"])
+async def get_user_associated_cst(current_user: User = Depends(get_current_active_user)):
+    data = user_funcs.get_all_csts_from_user(current_user.id)
+
+    cst_list = []
+    idx = len(data)
+    for i in range(idx):
+        aux=cst_funcs.get_costumer_from_id(data[i][2])
+        cst_list.append({"id": aux.id,
+                         "name": aux.name,
+                         "category": aux.category,
+                         "role": data[i][3]})
+
+    return cst_list

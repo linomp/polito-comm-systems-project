@@ -107,3 +107,11 @@ def get_role_costumer(user_id: int, costumer_id: int):
         return None
     else: 
         return data[0] 
+
+
+def get_all_csts_from_user(user_id: int):
+    values = (user_id,)
+    query = "SELECT * FROM users2costumers WHERE user_id=%s"
+    data = db.fetch_all(query, values)
+
+    return data
