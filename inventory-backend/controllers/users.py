@@ -41,16 +41,35 @@ async def protected_route_example(current_user: User = Depends(get_current_activ
 
 @router.post("/users", tags=["users"])
 async def create_user(user_data: NewUserDAO):
-    created_user = add_new_user(user_data)
+    try:
+        if user_funcs.get_user_from_email:
+            raise InvalidEmailException
+        if user_funcs.get_user_from_rfid:
+            raise InvalidRFIDException
 
-    return created_user
+        created_user = add_new_user(user_data)
+
+        return created_user
+    except InvalidEmailException:
+        raise HTTPException(status_code=403, detail="Email already in use")
+    except InvalidRFIDException:
+        raise HTTPException(status_code=403, detail="RFID already in use")
+
+
 
 
 @router.post("/users/card/update_card", tags=["users"])
 async def update_user_rfid_card(card_data: NewCardDAO, current_user: User = Depends(get_current_active_user)):
-    user = updt_users_card(current_user.id, card_data)
+    try:
+        if user_funcs.get_user_from_rfid:
+            raise InvalidRFIDException
+            
+        user = updt_users_card(current_user.id, card_data)
 
-    return user
+        return user
+    except InvalidRFIDException:
+        raise HTTPException(status_code=403, detail="RFID already in use")
+
 
 
 @router.post("/users/card/login", tags=["users"])

@@ -9,6 +9,7 @@ class Item(BaseModel):
     category: str
     costumer_id: int
     rfid: Optional[str]
+    renter_user_id: Optional[int]
 
 class NewItemDAO(BaseModel):
     name: str

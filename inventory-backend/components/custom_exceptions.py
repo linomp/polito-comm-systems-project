@@ -37,3 +37,11 @@ class AlreadyEmployeeException(Exception):
 
 class InvalidItemException(Exception):
     pass
+
+class InvalidRFIDException(Exception):
+    pass
+
+class InvalidEmailException(Exception):
+    pass
+class InvalidNameException(Exception):
+    pass
