@@ -2,6 +2,7 @@ from fastapi import APIRouter
 from fastapi.security import OAuth2PasswordRequestForm
 
 from schemas.Token import Token
+from schemas.user import UserDAO
 from services.users import *
 from cruds import users as user_funcs
 from cruds import costumers as cst_funcs
@@ -28,9 +29,13 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
     return {"access_token": access_token, "token_type": "bearer"}
 
 
-@router.get("/users/me/", tags=["users"], response_model=User)
+@router.get("/users/me/", tags=["users"], response_model=UserDAO)
 async def get_current_user(current_user: User = Depends(get_current_active_user)):
-    return current_user
+    return UserDAO(id=current_user.id,
+                   name=current_user.name,
+                   mail_adr=current_user.mail_adr,
+                   rfid=current_user.rfid,
+                   pin=current_user.pin)
 
 
 @router.get("/users/protected/", tags=["users"])
