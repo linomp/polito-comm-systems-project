@@ -40,20 +40,21 @@ async def protected_route_example(current_user: User = Depends(get_current_activ
 
 
 @router.post("/users", tags=["users"])
-def create_user(user_data: NewUserDAO):
+async def create_user(user_data: NewUserDAO):
     created_user = add_new_user(user_data)
 
     return created_user
 
 
 @router.post("/users/card/update_card", tags=["users"])
-def update_user_rfid_card(card_data: NewCardDAO, current_user: User = Depends(get_current_active_user)):
+async def update_user_rfid_card(card_data: NewCardDAO, current_user: User = Depends(get_current_active_user)):
     user = updt_users_card(current_user.id, card_data)
 
     return user
 
+
 @router.post("/users/card/login", tags=["users"])
-def login_from_rfid_card(card_data: NewCardDAO):
+async def login_from_rfid_card(card_data: NewCardDAO):
     try:
         user = login_from_card(card_data)
 
@@ -66,8 +67,8 @@ def login_from_rfid_card(card_data: NewCardDAO):
 
 
 @router.post("/users/employees/add_client", tags=["users"])
-def add_client_to_cst(new_client_id: int, costumer_id: int, current_user: User = Depends(get_current_active_user)):
-
+async def add_client_to_cst(new_client_id: int, costumer_id: int,
+                            current_user: User = Depends(get_current_active_user)):
     try:
         if not user_funcs.get_user_from_id(new_client_id):
             raise InvalidUserIDException
@@ -75,11 +76,10 @@ def add_client_to_cst(new_client_id: int, costumer_id: int, current_user: User =
         if not cst_funcs.get_costumer_from_id(costumer_id):
             raise InvalidCostumerIDException
 
-
         check_if_employee(current_user.id, costumer_id)
         add_client(new_client_id, costumer_id)
 
-        return 
+        return
     except InvalidCostumerIDException:
         raise HTTPException(status_code=404, detail="Invalid costumer ID")
     except InvalidUserIDException:
@@ -94,21 +94,20 @@ def add_client_to_cst(new_client_id: int, costumer_id: int, current_user: User =
         raise HTTPException(status_code=400, detail="User is already an employee")
 
 
-
 @router.post("/users/admin/add_employee", tags=["users"])
-def add_client_to_cst(new_employee_id: int, costumer_id: int, current_user: User = Depends(get_current_active_user)):
-
+async def add_client_to_cst(new_employee_id: int, costumer_id: int,
+                            current_user: User = Depends(get_current_active_user)):
     try:
         if not user_funcs.get_user_from_id(new_employee_id):
             raise InvalidUserIDException
 
         if not cst_funcs.get_costumer_from_id(costumer_id):
-            raise InvalidCostumerIDException        
+            raise InvalidCostumerIDException
 
         check_if_admin(current_user.id, costumer_id)
         add_employee(new_employee_id, costumer_id)
 
-        return 
+        return
     except InvalidCostumerIDException:
         raise HTTPException(status_code=404, detail="Invalid costumer ID")
     except InvalidUserIDException:
@@ -121,4 +120,3 @@ def add_client_to_cst(new_employee_id: int, costumer_id: int, current_user: User
         raise HTTPException(status_code=400, detail="User is already a client")
     except AlreadyEmployeeException:
         raise HTTPException(status_code=400, detail="User is already an employee")
-

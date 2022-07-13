@@ -16,3 +16,12 @@ class NewUserDAO(BaseModel):
     name: str
     mail_adr: str
     password: str
+
+    class Config:
+        schema_extra = {
+            "example": {
+                "name": "John Doe",
+                "mail_adr": "john@test.com",
+                "password": "password"
+            }
+        }
