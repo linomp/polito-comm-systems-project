@@ -49,9 +49,9 @@ def get_all_items_with_name(name: str):
     return data
 
 
-def get_all_items_from_category(categ: str):
-    values = (categ,)
-    query = "SELECT * FROM items WHERE category=%s"
+def get_all_items_from_categ_and_cst(cst_id: int, categ: str):
+    values = (cst_id, categ,)
+    query = "SELECT * FROM items WHERE costumer_id=%s AND category=%s"
     data = db.fetch_all(query, values)
 
     return data

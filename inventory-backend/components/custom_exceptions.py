@@ -35,5 +35,5 @@ class AlreadyClientException(Exception):
 class AlreadyEmployeeException(Exception):
     pass
 
-class InvalidItemNameorCategException(Exception):
+class InvalidItemException(Exception):
     pass
