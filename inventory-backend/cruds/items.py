@@ -89,6 +89,19 @@ def update_description(item_id: int, description: str):
 
     return
 
+def update_rfid(item_id: int, rfid: str):
+    values = (rfid, item_id)
+    query = "UPDATE items SET rfid=%s WHERE id=%s"
+    db.execute(query, values)
+
+    return
+
+def delete_rfid(item_id: int):
+    values = (None, item_id)
+    query = "UPDATE items SET rfid=%s WHERE id=%s"
+    db.execute(query, values)
+
+    return\
 
 def remove_item(item_id: int):
     values = (item_id,)

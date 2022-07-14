@@ -149,3 +149,56 @@ async def items_from_cst(cst_id:int):
     except InvalidCostumerIDException:
         raise HTTPException(status_code=403, detail="Invalid costumer ID")
 
+
+
+@router.post("/item/update_rfid", tags=["items"])
+async def update_items_rfid(item_id:int, new_rfid: str, current_user: User = Depends(get_current_active_user)):
+    try:
+
+        item = item_funcs.get_item_from_id(item_id)
+        if not item:
+            raise InvalidItemException
+        
+        check_if_employee(current_user.id, item.costumer_id)
+
+        if item_funcs.get_item_from_rfid(new_rfid):
+            raise InvalidRFIDException
+
+        
+
+        item_funcs.update_rfid(item_id, new_rfid)
+
+        return
+
+    except InvalidItemException:
+        raise HTTPException(status_code=403, detail="Invalid Item ID")
+    except InvalidRFIDException:
+        raise HTTPException(status_code=403, detail="New RFID already in use")
+    except NotAssociatedException:
+        raise HTTPException(status_code=401, detail="You are not associated to costumer")
+    except NoPermissionException:
+        raise HTTPException(status_code=401, detail="You don't have permission")
+
+
+
+@router.post("/item/delete_rfid", tags=["items"])
+async def delete_items_rfid(item_id:int, current_user: User = Depends(get_current_active_user)):
+    try:
+
+        item = item_funcs.get_item_from_id(item_id)
+        if not item:
+            raise InvalidItemException
+        
+        check_if_employee(current_user.id, item.costumer_id)
+
+        item_funcs.delete_rfid(item_id)
+
+        return
+    except InvalidItemException:
+        raise HTTPException(status_code=403, detail="Invalid Item ID")
+    except InvalidRFIDException:
+        raise HTTPException(status_code=403, detail="New RFID already in use")
+    except NotAssociatedException:
+        raise HTTPException(status_code=401, detail="You are not associated to costumer")
+    except NoPermissionException:
+        raise HTTPException(status_code=401, detail="You don't have permission")
