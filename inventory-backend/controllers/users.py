@@ -160,3 +160,27 @@ async def get_user_associated_cst(current_user: User = Depends(get_current_activ
                          "role": data[i][3]})
 
     return cst_list
+
+
+@router.post("/users/associate_to_cst", tags=["users"])
+async def associate_cst(costumer_id: int, current_user: User = Depends(get_current_active_user)):
+    try:
+        if not cst_funcs.get_costumer_from_id(costumer_id):
+            raise InvalidCostumerIDException
+
+        role = user_funcs.get_role_costumer(current_user.id, costumer_id)
+        if role==USER_ROLE_CLIENT:
+            raise AlreadyClientException
+        if role==USER_ROLE_ADMIN or role==USER_ROLE_OPERATOR:
+            raise AlreadyEmployeeException
+
+        
+        add_client(current_user.id, costumer_id)
+
+        return
+    except InvalidCostumerIDException:
+        raise HTTPException(status_code=404, detail="Invalid costumer ID")
+    except AlreadyClientException:
+        raise HTTPException(status_code=400, detail="User is already a client")
+    except AlreadyEmployeeException:
+        raise HTTPException(status_code=400, detail="User is already an employee")
