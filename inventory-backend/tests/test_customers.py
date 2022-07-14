@@ -41,7 +41,8 @@ class TestCustomers:
                 "default_user": {
                     "name": constants.DEFAULT_USER_NAME,
                     "mail_adr": test_name + constants.DEFAULT_ADMIN_USER_SUFFIX,
-                    "password": constants.DEFAULT_USER_PASSWORD
+                    "password": constants.DEFAULT_USER_PASSWORD,
+                    "rfid": None
                 }
             }
 
