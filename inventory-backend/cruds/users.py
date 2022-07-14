@@ -51,13 +51,13 @@ def get_user_from_id(user_id: int):
     query = "SELECT id, name, mail_adr, hashed_pw, salt, rfid, pin FROM users WHERE id=%s"
     data = db.fetch_one(query, values)
 
-    if not (data is None):
-        new_user = User(id=data[0], name=data[1], mail_adr=data[2],
-                        hashed_pw=data[3], salt=data[4], rfid=data[5], pin=data[6])
-
-        return new_user
-    else:
+    if data is None:
         return None
+
+    new_user = User(id=data[0], name=data[1], mail_adr=data[2],
+                    hashed_pw=data[3], salt=data[4], rfid=data[5], pin=data[6])
+
+    return new_user
 
 
 def get_user_from_email(mail_adr: str):
@@ -65,13 +65,13 @@ def get_user_from_email(mail_adr: str):
     query = "SELECT id, name, mail_adr, hashed_pw, salt, rfid, pin FROM users WHERE mail_adr=%s"
     data = db.fetch_one(query, values)
 
-    if not (data is None):
-        new_user = User(id=data[0], name=data[1], mail_adr=data[2],
-                        hashed_pw=data[3], salt=data[4], rfid=data[5], pin=data[6])
-
-        return new_user
-    else:
+    if data is None:
         return None
+
+    new_user = User(id=data[0], name=data[1], mail_adr=data[2],
+                    hashed_pw=data[3], salt=data[4], rfid=data[5], pin=data[6])
+
+    return new_user
 
 
 def get_user_from_rfid(rfid: str):
@@ -79,13 +79,13 @@ def get_user_from_rfid(rfid: str):
     query = "SELECT id, name, mail_adr, hashed_pw, salt, rfid, pin FROM users WHERE rfid=%s"
     data = db.fetch_one(query, values)
 
-    if not (data is None):
-        new_user = User(id=data[0], name=data[1], mail_adr=data[2],
-                        hashed_pw=data[3], salt=data[4], rfid=data[5], pin=data[6])
-
-        return new_user
-    else:
+    if data is None:
         return None
+
+    new_user = User(id=data[0], name=data[1], mail_adr=data[2],
+                    hashed_pw=data[3], salt=data[4], rfid=data[5], pin=data[6])
+
+    return new_user
 
 
 def remove_user(user_id: int):
@@ -96,17 +96,16 @@ def remove_user(user_id: int):
     return
 
 
-
 def get_role_costumer(user_id: int, costumer_id: int):
     values = (user_id,
               costumer_id)
     query = "SELECT role FROM users2costumers WHERE user_id=%s AND cst_id=%s"
     data = db.fetch_one(query, values)
 
-    if data == None:
+    if data is None:
         return None
-    else: 
-        return data[0] 
+    else:
+        return data[0]
 
 
 def get_all_csts_from_user(user_id: int):

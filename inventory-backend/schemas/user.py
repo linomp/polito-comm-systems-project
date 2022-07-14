@@ -35,6 +35,7 @@ class UserDAO(BaseModel):
 class NewUserDAO(BaseModel):
     name: str
     mail_adr: str
+    rfid: Optional[str]
     password: str
 
     class Config:

@@ -47,9 +47,9 @@ async def protected_route_example(current_user: User = Depends(get_current_activ
 @router.post("/users", tags=["users"])
 async def create_user(user_data: NewUserDAO):
     try:
-        if user_funcs.get_user_from_email:
+        if user_funcs.get_user_from_email(user_data.mail_adr):
             raise InvalidEmailException
-        if user_funcs.get_user_from_rfid:
+        if user_funcs.get_user_from_rfid(user_data.rfid):
             raise InvalidRFIDException
 
         created_user = add_new_user(user_data)
@@ -61,20 +61,17 @@ async def create_user(user_data: NewUserDAO):
         raise HTTPException(status_code=403, detail="RFID already in use")
 
 
-
-
 @router.post("/users/card/update_card", tags=["users"])
 async def update_user_rfid_card(card_data: NewCardDAO, current_user: User = Depends(get_current_active_user)):
     try:
-        if user_funcs.get_user_from_rfid:
+        if user_funcs.get_user_from_rfid(current_user.rfid):
             raise InvalidRFIDException
-            
+
         user = updt_users_card(current_user.id, card_data)
 
         return user
     except InvalidRFIDException:
         raise HTTPException(status_code=403, detail="RFID already in use")
-
 
 
 @router.post("/users/card/login", tags=["users"])
@@ -153,7 +150,7 @@ async def get_user_associated_cst(current_user: User = Depends(get_current_activ
     cst_list = []
     idx = len(data)
     for i in range(idx):
-        aux=cst_funcs.get_costumer_from_id(data[i][2])
+        aux = cst_funcs.get_costumer_from_id(data[i][2])
         cst_list.append({"id": aux.id,
                          "name": aux.name,
                          "category": aux.category,
