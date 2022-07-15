@@ -6,6 +6,7 @@ from schemas.user import UserDAO
 from services.users import *
 from cruds import users as user_funcs
 from cruds import costumers as cst_funcs
+from cruds import items as item_funcs
 from components.custom_exceptions import *
 
 from env import ACCESS_TOKEN_EXPIRE_MINUTES
@@ -184,3 +185,20 @@ async def associate_cst(costumer_id: int, current_user: User = Depends(get_curre
         raise HTTPException(status_code=400, detail="User is already a client")
     except AlreadyEmployeeException:
         raise HTTPException(status_code=400, detail="User is already an employee")
+
+
+
+@router.get("/users/get_my_rented_items", tags=["users"])
+async def get_rented_items(current_user: User = Depends(get_current_active_user)):
+    
+    data = item_funcs.get_items_rented_by_user(current_user.id)
+    
+    item_list=[]
+    idx=len(data)
+    for i in range(idx):
+        item_list.append({"id": data[i][0],
+                          "name": data[i][1],
+                          "description": data[i][2],
+                          "category": data[i][3]})
+    return item_list
+    
