@@ -1,6 +1,8 @@
 from pydantic.main import BaseModel
 from typing import Optional, Any
 
+from pymysql import Binary
+
 
 class User(BaseModel):
     id: Optional[int]
@@ -10,6 +12,7 @@ class User(BaseModel):
     salt: Optional[str]
     rfid: Optional[str]
     pin: Optional[int]
+    active: bool
 
 
 class UserDAO(BaseModel):

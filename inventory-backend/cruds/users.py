@@ -12,11 +12,13 @@ def add_user(new_user: User, password: str):
               hashed,
               salt,
               new_user.rfid,
-              new_user.pin
+              new_user.pin,
+              new_user.active
               )
 
-    query = "INSERT INTO users (id, name, mail_adr, hashed_pw, salt, rfid, pin) VALUES (%s, %s, %s, %s, %s, %s, %s)"
+    query = "INSERT INTO users (id, name, mail_adr, hashed_pw, salt, rfid, pin, active) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
     db.execute(query, values)
+
 
     return
 
@@ -26,8 +28,7 @@ def change_password(user_id: int, pwd: str):
 
     values = (hashed,
               salt,
-              user_id
-              )
+              user_id)
 
     query = "UPDATE users SET hashed_pw=%s, salt=%s WHERE id=%s"
     db.execute(query, values)
@@ -48,42 +49,45 @@ def update_users_card(user: User):
 
 def get_user_from_id(user_id: int):
     values = (user_id,)
-    query = "SELECT * FROM users WHERE id=%s"
+    query = "SELECT id, name, mail_adr, hashed_pw, salt, rfid, pin, active FROM users WHERE id=%s"
     data = db.fetch_one(query, values)
 
     if data is None:
         return None
 
     new_user = User(id=data[0], name=data[1], mail_adr=data[2],
-                    hashed_pw=data[3], salt=data[4], rfid=data[5], pin=data[6])
+                    hashed_pw=data[3], salt=data[4], rfid=data[5], 
+                    pin=data[6], active=data[7])
 
     return new_user
 
 
 def get_user_from_email(mail_adr: str):
     values = (mail_adr,)
-    query = "SELECT id, name, mail_adr, hashed_pw, salt, rfid, pin FROM users WHERE mail_adr=%s"
+    query = "SELECT id, name, mail_adr, hashed_pw, salt, rfid, pin, active FROM users WHERE mail_adr=%s"
     data = db.fetch_one(query, values)
 
     if data is None:
         return None
 
     new_user = User(id=data[0], name=data[1], mail_adr=data[2],
-                    hashed_pw=data[3], salt=data[4], rfid=data[5], pin=data[6])
+                    hashed_pw=data[3], salt=data[4], rfid=data[5], 
+                    pin=data[6], active=data[7])
 
     return new_user
 
 
 def get_user_from_rfid(rfid: str):
     values = (rfid,)
-    query = "SELECT id, name, mail_adr, hashed_pw, salt, rfid, pin FROM users WHERE rfid=%s"
+    query = "SELECT id, name, mail_adr, hashed_pw, salt, rfid, pin, active FROM users WHERE rfid=%s"
     data = db.fetch_one(query, values)
 
     if data is None:
         return None
 
     new_user = User(id=data[0], name=data[1], mail_adr=data[2],
-                    hashed_pw=data[3], salt=data[4], rfid=data[5], pin=data[6])
+                    hashed_pw=data[3], salt=data[4], rfid=data[5], 
+                    pin=data[6], active=data[7])
 
     return new_user
 
@@ -114,3 +118,11 @@ def get_all_csts_from_user(user_id: int):
     data = db.fetch_all(query, values)
 
     return data
+
+
+def update_active_user(user_id: int):
+    values = (True, user_id, )
+    query = "UPDATE users SET active=%s WHERE id=%s"
+    db.execute(query, values)
+
+    return
