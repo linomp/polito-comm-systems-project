@@ -48,7 +48,7 @@ def update_users_card(user: User):
 
 def get_user_from_id(user_id: int):
     values = (user_id,)
-    query = "SELECT id, name, mail_adr, hashed_pw, salt, rfid, pin FROM users WHERE id=%s"
+    query = "SELECT * FROM users WHERE id=%s"
     data = db.fetch_one(query, values)
 
     if data is None:

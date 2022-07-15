@@ -32,7 +32,7 @@ def get_item_from_id(item_id: int):
 
 def get_item_from_rfid(item_rfid: int):
     values = (item_rfid,)
-    query = "SELECT id, name, description, category, costumer_id, rfid, renter_user_id FROM items WHERE rfid=%s"
+    query = "SELECT * FROM items WHERE rfid=%s"
     data = db.fetch_one(query, values)
 
     if not (data is None):
@@ -101,7 +101,7 @@ def delete_rfid(item_id: int):
     query = "UPDATE items SET rfid=%s WHERE id=%s"
     db.execute(query, values)
 
-    return\
+    return
 
 def remove_item(item_id: int):
     values = (item_id,)
@@ -109,3 +109,31 @@ def remove_item(item_id: int):
     db.execute(query, values)
 
     return
+
+def get_renters_id(item_id:int):
+    values = (item_id,)
+    query = "SELECT renter_user_id FROM items WHERE id=%s"
+    renter_id = db.fetch_one(query, values)
+
+    return renter_id[0]
+
+def rent_item(item_id:int, user_id:int):
+    values = (user_id, item_id)
+    query = "UPDATE items SET renter_user_id=%s WHERE id=%s"
+    db.execute(query, values)
+
+    return
+
+def return_item(item_id: int):
+    values = (None, item_id )
+    query = "UPDATE items SET renter_user_id=%s WHERE id=%s"
+    db.execute(query, values)
+
+    return
+
+def get_items_rented_by_user(user_id: int):
+    values = (user_id, )
+    query = "SELECT * FROM items WHERE renter_user_id=%s"
+    data=db.fetch_all(query, values)
+
+    return data

@@ -43,5 +43,15 @@ class InvalidRFIDException(Exception):
 
 class InvalidEmailException(Exception):
     pass
+
 class InvalidNameException(Exception):
+    pass
+
+class AlreadyRentedException(Exception):
+    pass
+
+class AlreadyRentedbymeException(Exception):
+    pass
+
+class AlreadyRFIDException(Exception):
     pass
