@@ -230,3 +230,4 @@ async def activate_client(cst_id: int, act_user_id:int, current_user: User = Dep
         raise HTTPException(status_code=403, detail="You are not associated to costumer")
     except NoPermissionException:
         raise HTTPException(status_code=403, detail="You don't have permission")
+
