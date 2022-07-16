@@ -7,14 +7,14 @@ from fastapi.middleware.cors import CORSMiddleware
 from dependencies import db
 from schemas.test_message import TestMessage
 
-from controllers import users, customers, items 
+from controllers import users, customers, items
 
 app = FastAPI()
 app.include_router(users.router)
 app.include_router(customers.router)
 app.include_router(items.router)
 
-origins = ["*"]
+origins = ["http://localhost:63722"]
 
 app.add_middleware(
     CORSMiddleware,
