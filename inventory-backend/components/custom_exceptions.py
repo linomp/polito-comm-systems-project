@@ -64,3 +64,12 @@ class NotClientException(Exception):
 
 class ActiveFlagException(Exception):
     pass
+
+class WrongCsttoItemException(Exception):
+    pass
+
+class InvalidBookException(Exception):
+    pass
+
+class AlreadyBookException(Exception):
+    pass
