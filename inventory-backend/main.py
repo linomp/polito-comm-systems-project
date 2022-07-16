@@ -19,7 +19,7 @@ app.include_router(users.router)
 app.include_router(customers.router)
 app.include_router(items.router)
 
-origins = ["http://localhost:8080"]
+origins = ["http://apps.xmp.systems:8080"]
 
 app.add_middleware(
     CORSMiddleware,
