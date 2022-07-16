@@ -234,6 +234,9 @@ async def rent_items_by_rfid(item_rfid: str, current_user: User = Depends(get_cu
         if not user_funcs.get_role_costumer(current_user.id, rent_item.costumer_id):
             raise NotAssociatedException
 
+        if not check_activeflag(current_user.id):
+            raise ActiveFlagException
+
         
         renters_id=item_funcs.get_renters_id(rent_item.id)
         if renters_id==current_user.id:
@@ -244,6 +247,8 @@ async def rent_items_by_rfid(item_rfid: str, current_user: User = Depends(get_cu
         item_funcs.rent_item(rent_item.id, current_user.id)
 
         return
+    except ActiveFlagException:
+        raise HTTPException(status_code=403, detail="Not an active User")
     except AlreadyRentedbymeException:
         raise HTTPException(status_code=403, detail="Item already in your possession")
     except NotAssociatedException:

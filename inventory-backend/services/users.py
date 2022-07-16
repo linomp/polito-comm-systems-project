@@ -72,9 +72,9 @@ async def get_protected_route_example(current_user: User):
     return {"message": f"Welcome to this protected route, {current_user.name}"}
 
 
-def add_new_user(user_data: NewUserDAO):
+def add_new_user(user_data: NewUserDAO, actv: bool):
     new_user = User(id=None, name=user_data.name, mail_adr=user_data.mail_adr,
-                    hashed_pw=None, salt=None, rfid=None, pin=None)
+                    hashed_pw=None, salt=None, rfid=None, pin=None, active=actv)
 
     user_funcs.add_user(new_user, user_data.password)
 
@@ -102,6 +102,16 @@ def login_from_card(card_data: NewCardDAO):
 
     return user
 
+def check_if_client(user_id: int, costumer_id: int):
+    role = user_funcs.get_role_costumer(user_id, costumer_id)
+    if role!=USER_ROLE_CLIENT:
+        raise NotClientException
+    
+    return role
+
+def check_activeflag(user_id:int):
+    user=user_funcs.get_user_from_id(user_id)
+    return user.active
 
 
 #---------------------------------------------------

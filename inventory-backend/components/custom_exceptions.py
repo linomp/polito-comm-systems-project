@@ -55,3 +55,12 @@ class AlreadyRentedbymeException(Exception):
 
 class AlreadyRFIDException(Exception):
     pass
+
+class InvalidIDException(Exception):
+    pass
+
+class NotClientException(Exception):
+    pass
+
+class ActiveFlagException(Exception):
+    pass

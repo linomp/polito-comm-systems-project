@@ -56,7 +56,7 @@ async def create_user(user_data: NewUserDAO):
         if user_funcs.get_user_from_rfid(user_data.rfid):
             raise InvalidRFIDException
 
-        created_user = add_new_user(user_data)
+        created_user = add_new_user(user_data, False)
 
         return created_user
     except InvalidEmailException:
@@ -103,6 +103,8 @@ async def add_client_to_cst(new_client_id: int, costumer_id: int,
 
         check_if_employee(current_user.id, costumer_id)
         add_client(new_client_id, costumer_id)
+        
+        user_funcs.update_active_user(new_client_id)
 
         return
     except InvalidCostumerIDException:
@@ -131,6 +133,7 @@ async def add_client_to_cst(new_employee_id: int, costumer_id: int,
 
         check_if_admin(current_user.id, costumer_id)
         add_employee(new_employee_id, costumer_id)
+        user_funcs.update_active_user(new_employee_id)
 
         return
     except InvalidCostumerIDException:
@@ -180,7 +183,7 @@ async def associate_cst(costumer_id: int, current_user: User = Depends(get_curre
 
         return
     except InvalidCostumerIDException:
-        raise HTTPException(status_code=404, detail="Invalid costumer ID")
+        raise HTTPException(status_code=403, detail="Invalid costumer ID")
     except AlreadyClientException:
         raise HTTPException(status_code=400, detail="User is already a client")
     except AlreadyEmployeeException:
@@ -202,3 +205,29 @@ async def get_rented_items(current_user: User = Depends(get_current_active_user)
                           "category": data[i][3]})
     return item_list
     
+
+@router.get("/users/activate_client", tags=["users"])
+async def activate_client(cst_id: int, act_user_id:int, current_user: User = Depends(get_current_active_user)):
+    try:
+        
+        check_if_employee(current_user.id, cst_id)
+        if not user_funcs.get_user_from_id(act_user_id):
+            raise InvalidIDException
+        check_if_client(act_user_id, cst_id)
+
+        if check_activeflag(act_user_id):
+            raise ActiveFlagException
+        
+        user_funcs.update_active_user(act_user_id)
+        return
+    except ActiveFlagException:
+        raise HTTPException(status_code=403, detail="User already active")
+    except NotClientException:
+        raise HTTPException(status_code=403, detail="User is not client at shop")
+    except InvalidIDException:
+        raise HTTPException(status_code=403, detail="Invalid user ID")
+    except NotAssociatedException:
+        raise HTTPException(status_code=403, detail="You are not associated to costumer")
+    except NoPermissionException:
+        raise HTTPException(status_code=403, detail="You don't have permission")
+
