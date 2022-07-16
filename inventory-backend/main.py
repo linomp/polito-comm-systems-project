@@ -1,3 +1,5 @@
+import socket
+
 from datetime import datetime
 
 from fastapi import FastAPI
@@ -9,12 +11,15 @@ from schemas.test_message import TestMessage
 
 from controllers import users, customers, items
 
+hostname = socket.gethostname()
+IPAddr = socket.gethostbyname(hostname)
+
 app = FastAPI()
 app.include_router(users.router)
 app.include_router(customers.router)
 app.include_router(items.router)
 
-origins = ["http://localhost:63722"]
+origins = ["http://localhost:8080"]
 
 app.add_middleware(
     CORSMiddleware,
