@@ -182,10 +182,6 @@ class TestUsers:
                                                "pin": resp_card["pin"]})
             assert response.status_code == 200
 
-            resp_login = response_login.json()
-
-            assert resp_login["mail_adr"] == test_mail
-
     def test_add_client_to_cst(self):
         with TestClient(app) as client:
             # Create new customer

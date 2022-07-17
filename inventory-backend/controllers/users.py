@@ -27,10 +27,10 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
         return {"access_token": access_token, "token_type": "bearer"}
     except InvalidUserIDException:
         raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="Incorrect email or password",
-                headers={"WWW-Authenticate": "Bearer"},
-            )
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect email or password",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
 
 
 @router.get("/users/me/", tags=["users"], response_model=UserDAO)
@@ -82,9 +82,13 @@ async def update_user_rfid_card(card_data: NewCardDAO, current_user: User = Depe
 async def login_from_rfid_card(card_data: NewCardDAO):
     try:
         user = login_from_card(card_data)
-
-        return user
-
+        if not user:
+            raise InvalidUserIDException
+        access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+        access_token = create_access_token(
+            data={"sub": user.mail_adr}, expires_delta=access_token_expires
+        )
+        return {"access_token": access_token, "token_type": "bearer"}
     except WrongPinException:
         raise HTTPException(status_code=401, detail="Wrong pin")
     except InvalidCardIDException:
@@ -103,7 +107,7 @@ async def add_client_to_cst(new_client_id: int, costumer_id: int,
 
         check_if_employee(current_user.id, costumer_id)
         add_client(new_client_id, costumer_id)
-        
+
         user_funcs.update_active_user(new_client_id)
 
         return
@@ -173,12 +177,11 @@ async def associate_cst(costumer_id: int, current_user: User = Depends(get_curre
             raise InvalidCostumerIDException
 
         role = user_funcs.get_role_costumer(current_user.id, costumer_id)
-        if role==USER_ROLE_CLIENT:
+        if role == USER_ROLE_CLIENT:
             raise AlreadyClientException
-        if role==USER_ROLE_ADMIN or role==USER_ROLE_OPERATOR:
+        if role == USER_ROLE_ADMIN or role == USER_ROLE_OPERATOR:
             raise AlreadyEmployeeException
 
-        
         add_client(current_user.id, costumer_id)
 
         return
@@ -190,26 +193,24 @@ async def associate_cst(costumer_id: int, current_user: User = Depends(get_curre
         raise HTTPException(status_code=400, detail="User is already an employee")
 
 
-
 @router.get("/users/get_my_rented_items", tags=["users"])
 async def get_rented_items(current_user: User = Depends(get_current_active_user)):
-    
     data = item_funcs.get_items_rented_by_user(current_user.id)
-    
-    item_list=[]
-    idx=len(data)
+
+    item_list = []
+    idx = len(data)
     for i in range(idx):
         item_list.append({"id": data[i][0],
                           "name": data[i][1],
                           "description": data[i][2],
                           "category": data[i][3]})
     return item_list
-    
+
 
 @router.get("/users/activate_client", tags=["users"])
-async def activate_client(cst_id: int, act_user_id:int, current_user: User = Depends(get_current_active_user)):
+async def activate_client(cst_id: int, act_user_id: int, current_user: User = Depends(get_current_active_user)):
     try:
-        
+
         check_if_employee(current_user.id, cst_id)
         if not user_funcs.get_user_from_id(act_user_id):
             raise InvalidIDException
@@ -217,7 +218,7 @@ async def activate_client(cst_id: int, act_user_id:int, current_user: User = Dep
 
         if check_activeflag(act_user_id):
             raise ActiveFlagException
-        
+
         user_funcs.update_active_user(act_user_id)
         return
     except ActiveFlagException:
@@ -230,4 +231,3 @@ async def activate_client(cst_id: int, act_user_id:int, current_user: User = Dep
         raise HTTPException(status_code=403, detail="You are not associated to costumer")
     except NoPermissionException:
         raise HTTPException(status_code=403, detail="You don't have permission")
-
