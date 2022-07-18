@@ -146,7 +146,9 @@ async def items_from_cst(cst_id: int, current_user: User = Depends(get_current_a
                                   "name": data[i][1],
                                   "description": data[i][2],
                                   "category": data[i][3],
-                                  "renter_user_id": data[i][6]})
+                                  "rfid": data[i][5],
+                                  "renter_user_id": data[i][6],
+                                  })
         else:
             for i in range(idx):
                 if data[i][6] == None:
@@ -157,6 +159,7 @@ async def items_from_cst(cst_id: int, current_user: User = Depends(get_current_a
                                   "name": data[i][1],
                                   "description": data[i][2],
                                   "category": data[i][3],
+                                  "rfid": data[i][5],
                                   "available_for_rent": avail})
 
         return item_list

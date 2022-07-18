@@ -126,8 +126,8 @@ async def add_client_to_cst(new_client_id: int, costumer_id: int,
 
 
 @router.post("/users/admin/add_employee", tags=["users"])
-async def add_client_to_cst(new_employee_id: int, costumer_id: int,
-                            current_user: User = Depends(get_current_active_user)):
+async def add_employee_to_cst(new_employee_id: int, costumer_id: int,
+                              current_user: User = Depends(get_current_active_user)):
     try:
         if not user_funcs.get_user_from_id(new_employee_id):
             raise InvalidUserIDException
