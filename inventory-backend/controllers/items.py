@@ -326,7 +326,6 @@ async def return_items_in_bulk(rfids: List[str], current_user: User = Depends(ge
 
             item_funcs.return_item(rent_item.id)
 
-            return
         except Exception:
             pass
 
