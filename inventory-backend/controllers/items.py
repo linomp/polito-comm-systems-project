@@ -310,3 +310,24 @@ async def return_item_by_rfid(item_rfid: str, current_user: User = Depends(get_c
         raise HTTPException(status_code=403, detail="Invalid Item RFID")
     except NoPermissionException:
         raise HTTPException(status_code=403, detail="Item not in your possession")
+
+
+@router.post("/item/return_items", tags=["items"])
+async def return_items_in_bulk(rfids: List[str], current_user: User = Depends(get_current_active_user)):
+    for item_rfid in rfids:
+        try:
+            rent_item = item_funcs.get_item_from_rfid(item_rfid)
+            if not rent_item:
+                raise InvalidRFIDException
+
+            renters_id = item_funcs.get_renters_id(rent_item.id)
+            if renters_id != current_user.id:
+                raise NoPermissionException
+
+            item_funcs.return_item(rent_item.id)
+
+            return
+        except Exception:
+            pass
+
+    return

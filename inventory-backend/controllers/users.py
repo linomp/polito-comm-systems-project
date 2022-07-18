@@ -203,7 +203,8 @@ async def get_rented_items(current_user: User = Depends(get_current_active_user)
         item_list.append({"id": data[i][0],
                           "name": data[i][1],
                           "description": data[i][2],
-                          "category": data[i][3]})
+                          "category": data[i][3],
+                          "rfid": data[i][5]})
     return item_list
 
 
