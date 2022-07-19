@@ -11,9 +11,6 @@
     If you are taking part in the web service development, to run the tests you can execute one of these:
     - [test_no_venv.sh](https://github.com/linomp/polito-comm-systems-project/blob/main/inventory-backend/launch_server_no_venv.sh) - if you are using anaconda and not venv. It connects to our remote DB running on DigitalOcean.
     - [test_no_venv_local.sh](https://github.com/linomp/polito-comm-systems-project/blob/main/inventory-backend/launch_server_no_venv_local.sh) - if you are using anaconda and not venv. Requires a local MySQL installation with the `plcs_db` already in place.
-    
-    
-- [`raspberry-pi-scripts`](./raspberry-pi-scripts/) contains scripts to run in the rpi, e.g. nfc tag reading.
 
 ## Overall architecture of the app
 <img src="./architecture.png" width="80%">
